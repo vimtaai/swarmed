@@ -43,15 +43,15 @@ export abstract class Player extends Character {
       }
 
       // ! Score
-      this.layer.setFont(30, this.primaryColor, "left");
+      this.layer.setFont(3, this.primaryColor, "left");
       this.layer.drawText(new Point(5, 5), `SCORE: ${this.score.toString()}`);
 
       // ! Ammo
-      this.layer.setFont(30, this.weapon.isReloading ? "#ff0000" : this.weapon.primaryColor, "right");
+      this.layer.setFont(3, this.weapon.isReloading ? "#ff0000" : this.weapon.primaryColor, "right");
       this.layer.drawText(new Point(100 - 5, 100 - 5), `${this.weapon.remainingAmmo}/${this.weapon.maxAmmo}`);
 
       if (this.weapon.isReloading) {
-        this.layer.setFont(30, "#ff0000", "center");
+        this.layer.setFont(3, "#ff0000", "center");
         this.layer.drawText(new Point(50, 80), "RELOADING...");
       }
     });

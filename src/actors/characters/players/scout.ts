@@ -18,7 +18,7 @@ export class Scout extends Player {
 
   public draw() {
     // ! Backpack
-    this.layer.setStroke(2, "#000000");
+    this.layer.setStroke("#000000");
     this.layer.setFill(this.secondaryColor);
     this.layer.drawArc(new Point(-this.radius * 0.6, 0), this.radius * 0.8);
 

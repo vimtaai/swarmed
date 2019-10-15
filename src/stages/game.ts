@@ -89,11 +89,11 @@ export class GameStage extends Stage {
   protected destroyZombie(zombie: Zombie) {
     const index = state.zombies.indexOf(zombie);
     state.zombies.splice(index, 1);
+    state.player.score += zombie.scoreValue;
   }
 
   protected destroyProjectile(projectile: Projectile) {
     const index = state.player.projectiles.indexOf(projectile);
     state.player.projectiles.splice(index, 1);
-    state.player.score++;
   }
 }

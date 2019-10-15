@@ -5,11 +5,11 @@ export class HulkZombie extends Zombie {
   protected maxHealth = 200;
   protected showHealth = true;
 
-  public radius = 4;
-
   public secondaryColor = "#666666";
   public primaryColor = "#444444";
 
+  public radius = 4;
   public health = this.maxHealth;
   public damage = 50;
+  public scoreValue = 10;
 }

@@ -18,7 +18,7 @@ export class Heavy extends Player {
 
   public draw() {
     // ! Armor
-    this.layer.setStroke(2, "#000000");
+    this.layer.setStroke("#000000");
     this.layer.setFill(this.secondaryColor);
     this.layer.drawArc(new Point(0, 0), this.radius * 1.1);
 

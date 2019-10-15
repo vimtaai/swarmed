@@ -1,6 +1,5 @@
 import { Point } from "./utils/point";
 import { canvas } from "./canvas";
-import { Character } from "./actors/character";
 
 export class Layer {
   static defaultFont = "'Press Start 2P'";
@@ -38,9 +37,9 @@ export class Layer {
     root.style.height = `${size}px`;
   }
 
-  public setStroke(width: number, color: string) {
+  public setStroke(color: string = "#000000", width: number = 0.2) {
     this.context.strokeStyle = color;
-    this.context.lineWidth = width;
+    this.context.lineWidth = canvas.toPixels(width);
   }
 
   public setFill(color: string) {
@@ -54,8 +53,8 @@ export class Layer {
     vAlign: CanvasTextBaseline = "middle"
   ) {
     this.setFill(color);
-    this.setStroke(2, "#000000");
-    this.context.font = `${size}px ${Layer.defaultFont}`;
+    this.setStroke("#000000");
+    this.context.font = `${canvas.toPixels(size)}px ${Layer.defaultFont}`;
     this.context.textAlign = hAlign;
     this.context.textBaseline = vAlign;
   }

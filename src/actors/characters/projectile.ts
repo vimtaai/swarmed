@@ -21,7 +21,7 @@ export abstract class Projectile extends Character {
 
   draw() {
     super.draw();
-    this.layer.setStroke(20 * this.radius, "rgba(0, 0, 0, 0.5)");
+    this.layer.setStroke("rgba(0, 0, 0, 0.5)", 3 * this.radius);
     this.layer.drawLine(new Point(0, 0), new Point(-this.trailLength, 0));
   }
 }

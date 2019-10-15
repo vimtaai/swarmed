@@ -51,7 +51,7 @@ export abstract class Character {
   }
 
   public draw() {
-    this.layer.setStroke(2, "#000000");
+    this.layer.setStroke("#000000");
     this.layer.setFill(this.primaryColor);
     this.layer.drawArc(new Point(0, 0), this.radius);
 
@@ -65,7 +65,7 @@ export abstract class Character {
     const healthColorIndex = Math.floor((this.health / this.maxHealth) * (healthColors.length - 1));
 
     this.layer.setFill(healthColors[healthColorIndex]);
-    this.layer.setStroke(2, "#000000");
+    this.layer.setStroke("#000000");
     this.withAbsoluteFacing(function() {
       this.layer.drawRect(new Point(-healthWidth / 2, -this.radius * 1.8), healthWidth, 0.7);
     });

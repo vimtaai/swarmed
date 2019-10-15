@@ -69,7 +69,7 @@ export abstract class Weapon extends Character {
   }
 
   public draw() {
-    this.layer.setStroke(2, "#000000");
+    this.layer.setStroke("#000000");
     this.layer.setFill(this.primaryColor);
     this.layer.drawRect(new Point(0, -this.width / 2), this.length, this.width);
   }
