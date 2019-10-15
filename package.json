@@ -2,6 +2,10 @@
   "name": "zombies",
   "version": "1.0.0",
   "author": "Márton Visnovitz <vimtaai@inf.elte.hu>",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
   "devDependencies": {
     "parcel": "^1.12.4",
     "typescript": "^3.6.4"
