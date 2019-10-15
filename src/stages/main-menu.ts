@@ -1,92 +1,69 @@
-import { Stage, StageType } from "../stage";
-import { fillBackground, drawText } from "../utils/context";
-import { background, foreground } from "../canvas";
+import { Point } from "../utils/point";
+
 import { state } from "../state";
-import { Scout } from "../actors/actor/players/scout";
-import { Soldier } from "../actors/actor/players/soldier";
-import { Heavy } from "../actors/actor/players/heavy";
+
+import { Stage } from "../stage";
+import { Layers } from "../layers";
+
+import { Scout } from "../actors/characters/players/scout";
+import { Soldier } from "../actors/characters/players/soldier";
+import { Heavy } from "../actors/characters/players/heavy";
+import { Player } from "../actors/characters/player";
+
 import { GameStage } from "./game";
 
-export const MainMenuStage: Stage = {
-  type: StageType.MAIN_MENU,
-  init() {},
-  render() {
-    fillBackground(background, "#000000");
+export interface IMainMenuState {
+  player: Player;
+}
 
-    foreground.strokeStyle = "#000000";
-    foreground.lineWidth = 2;
-    foreground.textAlign = "center";
-    foreground.textBaseline = "middle";
-
-    foreground.font = "50px 'Press Start 2P'";
-    foreground.fillStyle = "#55AA33";
-    drawText(foreground, "ZOMBIES!!4!", foreground.canvas.width / 2, 100);
-
-    foreground.font = "30px 'Press Start 2P'";
-    foreground.fillStyle = "#ffffff";
-    drawText(foreground, "SELECT YOUR HERO: ", foreground.canvas.width / 2, 300);
-
-    const scout = new Scout(foreground);
-    scout.coords.x += 100;
-    scout.coords.y = 450;
-    scout.render();
-    foreground.font = "25px 'Press Start 2P'";
-    foreground.fillStyle = "#ffffff";
-    foreground.textAlign = "left";
-    drawText(foreground, "SCOUT", foreground.canvas.width / 2 - 200, 430);
-    foreground.font = "20px 'Press Start 2P'";
-    foreground.fillStyle = "#aaaaaa";
-    drawText(foreground, "THE NIMBLE", foreground.canvas.width / 2 - 200, 470);
-
-    const soldier = new Soldier(foreground);
-    soldier.coords.x += 100;
-    soldier.coords.y = 600;
-    soldier.render();
-    foreground.font = "25px 'Press Start 2P'";
-    foreground.fillStyle = "#ffffff";
-    foreground.textAlign = "left";
-    drawText(foreground, "SOLDIER", foreground.canvas.width / 2 - 200, 580);
-    foreground.font = "20px 'Press Start 2P'";
-    foreground.fillStyle = "#aaaaaa";
-    drawText(foreground, "THE STRONG", foreground.canvas.width / 2 - 200, 620);
-
-    const heavy = new Heavy(foreground);
-    heavy.coords.x += 100;
-    heavy.coords.y = 750;
-    heavy.render();
-    foreground.font = "25px 'Press Start 2P'";
-    foreground.fillStyle = "#ffffff";
-    foreground.textAlign = "left";
-    drawText(foreground, "HEAVY", foreground.canvas.width / 2 - 200, 730);
-    foreground.font = "20px 'Press Start 2P'";
-    foreground.fillStyle = "#aaaaaa";
-    drawText(foreground, "THE TOUGH", foreground.canvas.width / 2 - 200, 770);
-
-    foreground.strokeStyle = "#ff0000";
-    foreground.lineWidth = 5;
-    foreground.beginPath();
-    foreground.rect(foreground.canvas.width / 2 - 220, 370 + state.selectedClass * 150, 400, 150);
-    foreground.stroke();
-  },
-  next(dt: number) {
-    return;
-  },
-  listenForEvents() {
-    addEventListener("keydown", function(event: KeyboardEvent) {
-      if (!state && state.stage.type === StageType.GAME) {
-        return;
+export class MainMenuStage extends Stage {
+  protected playerOptions: Player[] = [new Scout(), new Soldier(), new Heavy()];
+  protected selectedPlayerOption: number = 0;
+  protected eventListeners = [
+    {
+      type: "keydown",
+      callback: (event: KeyboardEvent) => {
+        if (event.code === "KeyW") {
+          this.selectedPlayerOption = (this.selectedPlayerOption - 1 + 3) % 3;
+        } else if (event.code === "KeyS") {
+          this.selectedPlayerOption = (this.selectedPlayerOption + 1 + 3) % 3;
+        } else if (event.code === "Enter") {
+          state.player = this.playerOptions[this.selectedPlayerOption];
+          state.setStage(GameStage);
+        }
       }
+    }
+  ];
 
-      const classes = [Scout, Soldier, Heavy];
+  public render() {
+    Layers.background.fill("#000000");
+    Layers.foreground.setFont(40, "#55aa33");
+    Layers.foreground.drawText(new Point(state.size / 2, 100), "ZOMBIES!!4!");
+    Layers.foreground.setFont(30);
+    Layers.foreground.drawText(new Point(state.size / 2, 300), "SELECT YOUR HERO");
 
-      if (event.code === "KeyW") {
-        state.selectedClass = (state.selectedClass - 1 + 3) % 3;
-      } else if (event.code === "KeyS") {
-        state.selectedClass = (state.selectedClass + 1 + 3) % 3;
-      } else if (event.code === "Enter") {
-        state.player = new classes[state.selectedClass](foreground);
-        state.setStage(GameStage);
-      }
-    });
+    const playerSelectionStart = new Point(state.size / -200, 450);
+
+    for (let i = 0; i < this.playerOptions.length; i++) {
+      const playerOption = this.playerOptions[i];
+
+      playerOption.coords = new Point(state.size / 2 + 100, playerSelectionStart.y + i * 150);
+      playerOption.render();
+      Layers.foreground.setFont(25, playerOption.primaryColor, "left");
+      Layers.foreground.drawText(new Point(playerOption.coords.x - 300, playerOption.coords.y - 20), playerOption.name);
+      Layers.foreground.setFont(20, "#ffffff", "left");
+      Layers.foreground.drawText(
+        new Point(playerOption.coords.x - 300, playerOption.coords.y + 20),
+        playerOption.description
+      );
+    }
+
+    const selectionCoords = new Point(
+      state.size / 2 - 250,
+      playerSelectionStart.y - 75 + 150 * this.selectedPlayerOption
+    );
+    Layers.foreground.setStroke(5, "#ff0000");
+    Layers.foreground.setFill("transparent");
+    Layers.foreground.drawRect(selectionCoords, 500, 150);
   }
-};
+}

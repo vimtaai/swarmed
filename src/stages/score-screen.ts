@@ -1,29 +1,36 @@
-import { drawText, fillBackground } from "../utils/context";
+import { Point } from "../utils/point";
+
 import { state } from "../state";
-import { StageType } from "../stage";
-import { foreground, background } from "../canvas";
+import { Stage } from "../stage";
 
-export const ScoreScreenStage = {
-  type: StageType.SCORE_SCREEN,
-  init() {},
-  render() {
-    fillBackground(background, "#000000");
+import { Player } from "../actors/characters/player";
+import { Layers } from "../layers";
 
-    foreground.strokeStyle = "#000000";
-    foreground.lineWidth = 2;
-    foreground.textAlign = "center";
-    foreground.textBaseline = "middle";
+export interface IScoreScreenState {
+  player: Player;
+}
 
-    foreground.font = "50px 'Press Start 2P'";
-    foreground.fillStyle = "#ff0000";
-    drawText(foreground, "GAME OVER", foreground.canvas.width / 2, 100);
-
-    foreground.font = "30px 'Press Start 2P'";
-    foreground.fillStyle = "#ffffff";
-    drawText(foreground, "YOUR FINAL SCORE: " + state.player.score, foreground.canvas.width / 2, 300);
-  },
-  next(dt: number) {
+export class ScoreScreenStage extends Stage {
+  public init() {
     return;
-  },
-  listenForEvents() {}
-};
+  }
+
+  public next(dt: number) {
+    return;
+  }
+
+  public render() {
+    Layers.background.fill("#000000");
+    Layers.foreground.setStroke(2, "#000000");
+
+    Layers.foreground.setFont(50, "#ff0000");
+    Layers.foreground.drawText(new Point(state.size / 2, 100), "GAME OVER");
+
+    Layers.foreground.setFont(30, "#ffffff");
+    Layers.foreground.drawText(new Point(state.size / 2, 300), `YOUR FINAL SCORE: ${state.player.score}`);
+  }
+
+  public registerEventListeners() {
+    return;
+  }
+}
