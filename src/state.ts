@@ -5,6 +5,7 @@ import { Projectile } from "./actors/actor/projectile";
 
 import { foreground } from "./canvas";
 import { Stage } from "./stage";
+import { HulkZombie } from "./actors/actor/zombies/hulk";
 
 export class State {
   private zombieSpawnRate: number = 2;
@@ -23,7 +24,12 @@ export class State {
 
   public createZombie(dt: number) {
     if (Math.random() < this.zombieSpawnRate * dt) {
-      const newZombie = new CommonZombie(foreground);
+      let newZombie: Zombie;
+      if (Math.random() < 0.1) {
+        newZombie = new HulkZombie(foreground);
+      } else {
+        newZombie = new CommonZombie(foreground);
+      }
       newZombie.setCoords();
       newZombie.setFacing(this.player.coords);
       this.zombies.push(newZombie);
