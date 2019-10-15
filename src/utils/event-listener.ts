@@ -1,1 +1,1 @@
-export type EventListener = { type: string; callback: EventListenerOrEventListenerObject };
+export type EventListener = { type: string; callback: Function };

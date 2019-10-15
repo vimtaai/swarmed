@@ -1,31 +1,40 @@
 import { Point } from "../utils/point";
-import { Layer, Layers } from "../layers";
+import { Layer, layers } from "../layers";
+import { canvas } from "../canvas";
 
 export abstract class Character {
-  protected radius: number;
+  protected speed: Point;
+  protected maxHealth: number;
+  protected showHealth: boolean = false;
 
   public name: string;
   public primaryColor: string;
   public secondaryColor: string;
   public description: string;
 
+  public health: number;
   public layer: Layer;
-  public facing: number;
   public coords: Point;
+  public facing: number;
+  public radius: number;
 
   constructor() {
-    this.layer = Layers.foreground;
+    this.layer = layers.foreground;
     this.facing = 0;
   }
 
-  protected translateToRelative() {
-    this.layer.context.translate(this.coords.x, this.coords.y);
+  protected withAbsoluteFacing(fn: Function) {
+    this.layer.context.rotate(-this.facing);
+    fn.call(this);
     this.layer.context.rotate(this.facing);
   }
 
-  protected translateToAbsolute() {
-    this.layer.context.rotate(-this.facing);
-    this.layer.context.translate(-this.coords.x, -this.coords.y);
+  protected withAbsoluteCoords(fn: Function) {
+    this.withAbsoluteFacing(function() {
+      this.layer.context.translate(-this.coords.x, -this.coords.y);
+      fn.call(this);
+      this.layer.context.translate(this.coords.x, this.coords.y);
+    });
   }
 
   public setFacing(target: Point) {
@@ -36,43 +45,37 @@ export abstract class Character {
     return this.coords.distanceTo(actor.coords) < this.radius + actor.radius;
   }
 
-  public render() {
+  public next(dt: number) {
+    this.coords.x += canvas.toPixels(this.speed.x * dt);
+    this.coords.y += canvas.toPixels(this.speed.y * dt);
+  }
+
+  public draw() {
     this.layer.setStroke(2, "#000000");
     this.layer.setFill(this.primaryColor);
-
-    this.layer.context.translate(this.coords.x, this.coords.y);
     this.layer.drawArc(new Point(0, 0), this.radius);
-    this.layer.context.translate(-this.coords.x, -this.coords.y);
-  }
-}
 
-export abstract class ActorWithSpeed extends Character {
-  protected speed: Point;
+    if (!this.showHealth) {
+      return;
+    }
 
-  public next(dt: number) {
-    this.coords.x += this.speed.x * dt;
-    this.coords.y += this.speed.y * dt;
-  }
-}
-
-export abstract class ActorWithHealth extends ActorWithSpeed {
-  protected maxHealth: number;
-
-  public health: number;
-
-  public render() {
-    super.render();
-
-    const healthMaxWidth = this.radius * 2;
-    const healthCoords = new Point(this.coords.x - healthMaxWidth / 2, this.coords.y - this.radius * 2);
+    const healthMaxWidth = this.maxHealth / 50;
     const healthWidth = Math.max(healthMaxWidth * (this.health / this.maxHealth), 0);
-    const healthHeight = 5;
     const healthColors = ["#ff0000", "#ff8800", "#ffff00", "#00ff55"];
     const healthColorIndex = Math.floor((this.health / this.maxHealth) * (healthColors.length - 1));
-    const healthColor = healthColors[healthColorIndex];
 
-    this.layer.setFill(healthColor);
+    this.layer.setFill(healthColors[healthColorIndex]);
     this.layer.setStroke(2, "#000000");
-    this.layer.drawRect(new Point(healthCoords.x, healthCoords.y), healthWidth, healthHeight);
+    this.withAbsoluteFacing(function() {
+      this.layer.drawRect(new Point(-healthWidth / 2, -this.radius * 1.8), healthWidth, 0.7);
+    });
+  }
+
+  public render() {
+    this.layer.context.translate(this.coords.x, this.coords.y);
+    this.layer.context.rotate(this.facing);
+    this.draw();
+    this.layer.context.rotate(-this.facing);
+    this.layer.context.translate(-this.coords.x, -this.coords.y);
   }
 }

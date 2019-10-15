@@ -1,38 +1,27 @@
 import { Point } from "../../../utils/point";
 
 import { Player } from "../player";
-import { Weapon } from "../weapon";
 import { Rifle } from "../weapon/rifle";
 
 export class Heavy extends Player {
-  protected absoluteSpeed: number = 150;
-  protected radius: number = 30;
+  protected moveSpeed = 1;
   protected maxHealth = 400;
 
   public name = "HEAVY";
   public description = "THE TOUGH";
-  public primaryColor: string = "#555588";
-  public secondaryColor: string = "#333355";
+  public primaryColor = "#555588";
+  public secondaryColor = "#333355";
 
+  public radius = 3;
   public health = this.maxHealth;
-  public weapon: Weapon = new Rifle(this);
+  public weapon = new Rifle(this);
 
-  public render() {
-    this.translateToRelative();
-
+  public draw() {
     // ! Armor
     this.layer.setStroke(2, "#000000");
     this.layer.setFill(this.secondaryColor);
-    this.layer.drawArc(new Point(0, -this.radius + 10), 20);
-    this.layer.drawArc(new Point(0, this.radius - 10), 20);
-    this.layer.drawArc(new Point(10, 0), this.radius - 5);
+    this.layer.drawArc(new Point(0, 0), this.radius * 1.1);
 
-    // ! Second hand
-    this.layer.setFill(this.primaryColor);
-    this.layer.drawArc(new Point(this.radius + 15, 0), this.radius / 3);
-
-    this.translateToAbsolute();
-
-    super.render();
+    super.draw();
   }
 }

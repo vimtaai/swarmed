@@ -1,10 +1,10 @@
 import { Point } from "../utils/point";
 
 import { state } from "../state";
+import { canvas } from "../canvas";
+import { layers } from "../layers";
 
 import { Stage } from "../stage";
-import { Layers } from "../layers";
-
 import { Scout } from "../actors/characters/players/scout";
 import { Soldier } from "../actors/characters/players/soldier";
 import { Heavy } from "../actors/characters/players/heavy";
@@ -27,7 +27,7 @@ export class MainMenuStage extends Stage {
           this.selectedPlayerOption = (this.selectedPlayerOption - 1 + 3) % 3;
         } else if (event.code === "KeyS") {
           this.selectedPlayerOption = (this.selectedPlayerOption + 1 + 3) % 3;
-        } else if (event.code === "Enter") {
+        } else if (event.code === "Space") {
           state.player = this.playerOptions[this.selectedPlayerOption];
           state.setStage(GameStage);
         }
@@ -36,34 +36,34 @@ export class MainMenuStage extends Stage {
   ];
 
   public render() {
-    Layers.background.fill("#000000");
-    Layers.foreground.setFont(40, "#55aa33");
-    Layers.foreground.drawText(new Point(state.size / 2, 100), "ZOMBIES!!4!");
-    Layers.foreground.setFont(30);
-    Layers.foreground.drawText(new Point(state.size / 2, 300), "SELECT YOUR HERO");
+    layers.background.fill("#000000");
+    layers.foreground.setFont(40, "#55aa33");
+    layers.foreground.drawText(new Point(50, 10), "ZOMBIES!!4!");
+    layers.foreground.setFont(30);
+    layers.foreground.drawText(new Point(50, 30), "SELECT YOUR HERO");
 
-    const playerSelectionStart = new Point(state.size / -200, 450);
+    const selectionStart = 45;
+    const itemHeight = 15;
 
     for (let i = 0; i < this.playerOptions.length; i++) {
       const playerOption = this.playerOptions[i];
 
-      playerOption.coords = new Point(state.size / 2 + 100, playerSelectionStart.y + i * 150);
+      const yOffset = selectionStart + i * itemHeight;
+      playerOption.coords = new Point(65, yOffset);
       playerOption.render();
-      Layers.foreground.setFont(25, playerOption.primaryColor, "left");
-      Layers.foreground.drawText(new Point(playerOption.coords.x - 300, playerOption.coords.y - 20), playerOption.name);
-      Layers.foreground.setFont(20, "#ffffff", "left");
-      Layers.foreground.drawText(
-        new Point(playerOption.coords.x - 300, playerOption.coords.y + 20),
-        playerOption.description
-      );
+
+      layers.foreground.setFont(25, playerOption.primaryColor, "left");
+      layers.foreground.drawText(new Point(30, yOffset - 2), playerOption.name);
+      layers.foreground.setFont(20, "#ffffff", "left");
+      layers.foreground.drawText(new Point(30, yOffset + 2), playerOption.description);
     }
 
-    const selectionCoords = new Point(
-      state.size / 2 - 250,
-      playerSelectionStart.y - 75 + 150 * this.selectedPlayerOption
-    );
-    Layers.foreground.setStroke(5, "#ff0000");
-    Layers.foreground.setFill("transparent");
-    Layers.foreground.drawRect(selectionCoords, 500, 150);
+    layers.foreground.setFont(25, "#ffffff", "center");
+    layers.foreground.drawText(new Point(50, 90), "PRESS SPACE TO START");
+
+    const selectionCoords = new Point(25, selectionStart - itemHeight / 2 + itemHeight * this.selectedPlayerOption);
+    layers.foreground.setStroke(5, "#ff0000");
+    layers.foreground.setFill("transparent");
+    layers.foreground.drawRect(selectionCoords, 50, itemHeight);
   }
 }

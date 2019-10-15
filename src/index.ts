@@ -1,5 +1,6 @@
 import { state } from "./state";
-import { Layers } from "./layers";
+import { canvas } from "./canvas";
+import { layers } from "./layers";
 
 import { MainMenuStage } from "./stages/main-menu";
 
@@ -10,8 +11,8 @@ function gameLoop() {
 
   state.stage.next(dt);
 
-  for (const layer in Layers) {
-    Layers[layer].clear();
+  for (const layer in layers) {
+    layers[layer].clear();
   }
 
   state.stage.render();
@@ -20,27 +21,12 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-function autoSize() {
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
-  const size = Math.min(windowWidth, windowHeight);
-
-  state.size = size;
-
-  for (const layer in Layers) {
-    Layers[layer].canvas.width = size;
-    Layers[layer].canvas.height = size;
-  }
-
-  const root = document.getElementById("canvas");
-  root.style.width = `${size}px`;
-  root.style.height = `${size}px`;
-}
-
-addEventListener("resize", autoSize);
+addEventListener("resize", function() {
+  canvas.autoSize();
+});
 
 addEventListener("load", function() {
-  autoSize();
+  canvas.autoSize();
   state.setStage(MainMenuStage);
   requestAnimationFrame(gameLoop);
 });

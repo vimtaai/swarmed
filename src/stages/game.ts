@@ -1,6 +1,6 @@
 import { state } from "../state";
 import { Stage } from "../stage";
-import { Layers } from "../layers";
+import { layers } from "../layers";
 import { Zombie } from "../actors/characters/zombie";
 import { Player } from "../actors/characters/player";
 import { CommonZombie } from "../actors/characters/zombies/common";
@@ -39,7 +39,7 @@ export class GameStage extends Stage {
         state.player.health -= zombie.damage;
         this.destroyZombie(zombie);
 
-        if (state.player.health === 0) {
+        if (state.player.health <= 0) {
           state.setStage(ScoreScreenStage);
         }
         continue;
@@ -47,16 +47,20 @@ export class GameStage extends Stage {
 
       for (const projectile of state.player.projectiles) {
         if (zombie.collidesWith(projectile)) {
-          this.destroyZombie(zombie);
+          zombie.health -= projectile.damage;
           this.destroyProjectile(projectile);
-          break;
+
+          if (zombie.health <= 0) {
+            this.destroyZombie(zombie);
+            break;
+          }
         }
       }
     }
   }
 
   public render() {
-    Layers.background.fill("#4dbd33");
+    layers.background.fill("#4dbd33");
 
     for (const zombie of state.zombies) {
       zombie.render();
@@ -68,13 +72,16 @@ export class GameStage extends Stage {
   protected createZombie(dt: number) {
     if (Math.random() < this.zombieSpawnRate * dt) {
       let newZombie: Zombie;
+
       if (Math.random() < 0.1) {
         newZombie = new HulkZombie();
       } else {
         newZombie = new CommonZombie();
       }
+
       newZombie.setCoords();
       newZombie.setFacing(state.player.coords);
+
       state.zombies.push(newZombie);
     }
   }

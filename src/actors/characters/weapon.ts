@@ -9,9 +9,10 @@ export abstract class Weapon extends Character {
   protected reloadTimer: number;
 
   public primaryColor: string;
+  public length: number;
   public width: number;
-  public height: number;
 
+  public handOffsets: Point[];
   public rateOfFire: number;
   public reloadTime: number;
   public maxAmmo: number;
@@ -20,7 +21,7 @@ export abstract class Weapon extends Character {
   public ProjectileType: any;
 
   public get coords(): Point {
-    return Point.fromFacingAndLength(this.player.facing, this.width, this.player.coords);
+    return Point.fromFacingAndLength(this.player.facing, this.player.radius, this.player.coords);
   }
 
   public get isReloading(): boolean {
@@ -54,7 +55,8 @@ export abstract class Weapon extends Character {
     if (this.canFire) {
       const projectile = new this.ProjectileType(this);
 
-      projectile.setFacing(target);
+      projectile.facing = this.player.coords.facingTo(target);
+
       this.remainingAmmo--;
       this.lastFire = Date.now();
 
@@ -66,9 +68,9 @@ export abstract class Weapon extends Character {
     }
   }
 
-  public render() {
+  public draw() {
     this.layer.setStroke(2, "#000000");
     this.layer.setFill(this.primaryColor);
-    this.layer.drawRect(new Point(0, -this.height / 2), this.width, this.height);
+    this.layer.drawRect(new Point(0, -this.width / 2), this.length, this.width);
   }
 }

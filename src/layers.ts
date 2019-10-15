@@ -1,4 +1,6 @@
 import { Point } from "./utils/point";
+import { canvas } from "./canvas";
+import { Character } from "./actors/character";
 
 export class Layer {
   static defaultFont = "'Press Start 2P'";
@@ -7,7 +9,6 @@ export class Layer {
   public context: CanvasRenderingContext2D;
   public width: number;
   public height: number;
-  public scaling: number;
 
   constructor(id) {
     const root = document.getElementById("canvas");
@@ -35,10 +36,6 @@ export class Layer {
     const root = document.getElementById("canvas");
     root.style.width = `${size}px`;
     root.style.height = `${size}px`;
-  }
-
-  public handleWindowResize() {
-    this.autoSize();
   }
 
   public setStroke(width: number, color: string) {
@@ -86,20 +83,20 @@ export class Layer {
 
   public drawRect(coords: Point, width: number, height: number) {
     this.context.beginPath();
-    this.context.rect(coords.x, coords.y, width, height);
+    this.context.rect(coords.x, coords.y, canvas.toPixels(width), canvas.toPixels(height));
     this.context.fill();
     this.context.stroke();
   }
 
   public drawArc(coords: Point, radius: number) {
     this.context.beginPath();
-    this.context.arc(coords.x, coords.y, radius, 0, Math.PI * 2);
+    this.context.arc(coords.x, coords.y, canvas.toPixels(radius), 0, Math.PI * 2);
     this.context.fill();
     this.context.stroke();
   }
 }
 
-export const Layers: { [name: string]: Layer } = {
+export const layers: { [name: string]: Layer } = {
   background: new Layer("background"),
   foreground: new Layer("foreground"),
   overlay: new Layer("overlay"),

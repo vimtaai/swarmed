@@ -1,15 +1,17 @@
+import { Point } from "../../../utils/point";
 import { Weapon } from "../weapon";
-import { Bullet } from "../projectile/bullet";
+import { Bullet12mm } from "../projectile/bullet-12mm";
 
 export class Rifle extends Weapon {
-  public width: number = 70;
-  public height: number = 6;
-  public primaryColor: string = "#882200";
+  public length = 8;
+  public width = 0.75;
+  public primaryColor = "#882200";
 
-  public rateOfFire: number = 300;
-  public reloadTime: number = 2000;
-  public maxAmmo: number = 10;
-  public remainingAmmo: number = this.maxAmmo;
+  public handOffsets = [new Point(0, 0), new Point(3, 0.3)];
+  public rateOfFire = 300;
+  public reloadTime = 1500;
+  public maxAmmo = 12;
+  public remainingAmmo = this.maxAmmo;
 
-  public ProjectileType: typeof Bullet = Bullet;
+  public ProjectileType = Bullet12mm;
 }

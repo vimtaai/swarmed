@@ -4,6 +4,7 @@ body {
   align-items: center;
   justify-content: center;
   background: #111111;
+  cursor: crosshair;
 }
 
 #canvas {

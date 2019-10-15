@@ -1,11 +1,14 @@
 import { Zombie } from "../zombie";
 
 export class CommonZombie extends Zombie {
-  protected absoluteSpeed: number = 50;
-  protected radius: number = 20;
+  protected absoluteSpeed = 0.5;
+  protected maxHealth = 1;
 
-  public secondaryColor: string = "#888888";
-  public primaryColor: string = "#666666";
+  public radius = 2.5;
 
-  public damage: number = 10;
+  public secondaryColor = "#888888";
+  public primaryColor = "#666666";
+
+  public health = this.maxHealth;
+  public damage = 10;
 }

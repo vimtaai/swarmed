@@ -4,33 +4,33 @@ import { state } from "../state";
 import { Stage } from "../stage";
 
 import { Player } from "../actors/characters/player";
-import { Layers } from "../layers";
+import { layers } from "../layers";
+import { MainMenuStage } from "./main-menu";
 
 export interface IScoreScreenState {
   player: Player;
 }
 
 export class ScoreScreenStage extends Stage {
-  public init() {
-    return;
-  }
-
-  public next(dt: number) {
-    return;
-  }
-
+  protected eventListeners = [
+    {
+      type: "keydown",
+      callback: (event: KeyboardEvent) => {
+        if (event.code === "Space") {
+          state.setStage(MainMenuStage);
+        }
+      }
+    }
+  ];
   public render() {
-    Layers.background.fill("#000000");
-    Layers.foreground.setStroke(2, "#000000");
+    layers.background.fill("#000000");
+    layers.foreground.setStroke(2, "#000000");
 
-    Layers.foreground.setFont(50, "#ff0000");
-    Layers.foreground.drawText(new Point(state.size / 2, 100), "GAME OVER");
+    layers.foreground.setFont(50, "#ff0000");
+    layers.foreground.drawText(new Point(50, 20), "GAME OVER");
 
-    Layers.foreground.setFont(30, "#ffffff");
-    Layers.foreground.drawText(new Point(state.size / 2, 300), `YOUR FINAL SCORE: ${state.player.score}`);
-  }
-
-  public registerEventListeners() {
-    return;
+    layers.foreground.setFont(30, "#ffffff");
+    layers.foreground.drawText(new Point(50, 50), `YOUR FINAL SCORE: ${state.player.score}`);
+    layers.foreground.drawText(new Point(50, 70), "PRESS SPACE TO RESTART");
   }
 }

@@ -1,11 +1,13 @@
 import { Point } from "../../utils/point";
-import { ActorWithSpeed } from "../character";
+import { canvas } from "../../canvas";
+import { Character } from "../character";
 import { Weapon } from "./weapon";
 
-export abstract class Projectile extends ActorWithSpeed {
+export abstract class Projectile extends Character {
   protected absoluteSpeed: number;
+  protected trailLength: number;
 
-  public trailLength: number;
+  public damage: number;
 
   public get speed(): Point {
     return new Point(Math.cos(this.facing) * this.absoluteSpeed, Math.sin(this.facing) * this.absoluteSpeed);
@@ -14,15 +16,12 @@ export abstract class Projectile extends ActorWithSpeed {
   constructor(weapon: Weapon) {
     super();
 
-    this.coords = new Point(weapon.coords.x, weapon.coords.y);
+    this.coords = new Point(canvas.fromPixels(weapon.coords.x), canvas.fromPixels(weapon.coords.y));
   }
 
-  render() {
-    super.render();
-
-    const endOfTrail = Point.fromFacingAndLength(this.facing + Math.PI, this.trailLength, this.coords);
-
-    this.layer.setStroke(2 * this.radius, "rgba(0, 0, 0, 0.5)");
-    this.layer.drawLine(this.coords, endOfTrail);
+  draw() {
+    super.draw();
+    this.layer.setStroke(20 * this.radius, "rgba(0, 0, 0, 0.5)");
+    this.layer.drawLine(new Point(0, 0), new Point(-this.trailLength, 0));
   }
 }

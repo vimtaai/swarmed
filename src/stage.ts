@@ -1,4 +1,5 @@
 import { EventListener } from "./utils/event-listener";
+import { state } from "./state";
 
 export class Stage {
   private areEventListenersRegistered: boolean = false;
@@ -9,14 +10,18 @@ export class Stage {
   public render() {}
 
   public registerEventListeners() {
-    const root = document.querySelector("canvas");
-
     if (this.areEventListenersRegistered) {
       return;
     }
 
     for (const eventListener of this.eventListeners) {
-      addEventListener(eventListener.type, eventListener.callback, false);
+      const thisStage = this;
+      addEventListener(eventListener.type, function(event: Event) {
+        if (state.stage === thisStage) {
+          event.preventDefault();
+          eventListener.callback.call(event.target, event);
+        }
+      });
     }
 
     this.areEventListenersRegistered = true;
