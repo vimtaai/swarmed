@@ -12,15 +12,15 @@ export class Heavy extends Player {
   public primaryColor = "#555588";
   public secondaryColor = "#333355";
 
-  public radius = 3;
+  public radius = 2.8;
   public health = this.maxHealth;
   public weapon = new Rifle(this);
 
   public draw() {
     // ! Armor
-    this.layer.setStroke("#000000");
+    this.layer.setStroke("#000000", 0.3);
     this.layer.setFill(this.secondaryColor);
-    this.layer.drawArc(new Point(0, 0), this.radius * 1.1);
+    this.layer.drawArc(new Point(0, 0), this.radius * 1.2);
 
     super.draw();
   }

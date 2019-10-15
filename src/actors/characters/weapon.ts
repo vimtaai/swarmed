@@ -7,6 +7,7 @@ export abstract class Weapon extends Character {
   protected player: Player;
   protected lastFire: number = 0;
   protected reloadTimer: number;
+  protected reloadStarted: number;
 
   public primaryColor: string;
   public length: number;
@@ -44,6 +45,9 @@ export abstract class Weapon extends Character {
     if (this.isReloading) {
       clearInterval(this.reloadTimer);
     }
+
+    this.reloadStarted = Date.now();
+    this.remainingAmmo = 0;
 
     this.reloadTimer = setTimeout(() => {
       this.remainingAmmo = this.maxAmmo;

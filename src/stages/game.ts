@@ -8,10 +8,12 @@ import { HulkZombie } from "../actors/characters/zombies/hulk";
 import { Projectile } from "../actors/characters/projectile";
 
 import { ScoreScreenStage } from "./score-screen";
+import { Point } from "../utils/point";
 
 export interface IGameStageState {
   player: Player;
   zombies: Zombie[];
+  score: number;
 }
 
 export class GameStage extends Stage {
@@ -24,7 +26,9 @@ export class GameStage extends Stage {
   ];
 
   public init() {
+    state.player.showHealth = true;
     state.zombies = [];
+    state.score = 0;
   }
 
   public next(dt: number) {
@@ -67,6 +71,15 @@ export class GameStage extends Stage {
     }
 
     state.player.render();
+
+    // ! Score
+    layers.ui.setFont(3, "#ffffff", "left");
+    layers.ui.drawText(new Point(5, 5), `SCORE: ${state.score.toString()}`);
+
+    // ! Ammo
+    const ammoLabel = `${state.player.weapon.remainingAmmo}/${state.player.weapon.maxAmmo}`;
+    layers.ui.setFont(3, state.player.weapon.isReloading ? "#ff0000" : state.player.weapon.primaryColor, "right");
+    layers.ui.drawText(new Point(100 - 5, 100 - 5), ammoLabel);
   }
 
   protected createZombie(dt: number) {
@@ -89,7 +102,7 @@ export class GameStage extends Stage {
   protected destroyZombie(zombie: Zombie) {
     const index = state.zombies.indexOf(zombie);
     state.zombies.splice(index, 1);
-    state.player.score += zombie.scoreValue;
+    state.score += zombie.scoreValue;
   }
 
   protected destroyProjectile(projectile: Projectile) {

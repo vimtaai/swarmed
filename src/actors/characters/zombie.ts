@@ -6,6 +6,7 @@ export abstract class Zombie extends Character {
   protected absoluteSpeed: number;
 
   public damage: number;
+  public scoreValue: number;
 
   public get speed(): Point {
     return new Point(Math.cos(this.facing) * this.absoluteSpeed, Math.sin(this.facing) * this.absoluteSpeed);

@@ -5,12 +5,12 @@ import { canvas } from "../canvas";
 export abstract class Character {
   protected speed: Point;
   protected maxHealth: number;
-  protected showHealth: boolean = false;
 
   public name: string;
+  public description: string;
   public primaryColor: string;
   public secondaryColor: string;
-  public description: string;
+  public showHealth: boolean = false;
 
   public health: number;
   public layer: Layer;

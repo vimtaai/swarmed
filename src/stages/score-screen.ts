@@ -30,7 +30,7 @@ export class ScoreScreenStage extends Stage {
     layers.foreground.drawText(new Point(50, 20), "GAME OVER");
 
     layers.foreground.setFont(3, "#ffffff");
-    layers.foreground.drawText(new Point(50, 50), `YOUR FINAL SCORE: ${state.player.score}`);
+    layers.foreground.drawText(new Point(50, 50), `YOUR FINAL SCORE: ${state.score}`);
     layers.foreground.drawText(new Point(50, 70), "PRESS SPACE TO RESTART");
   }
 }

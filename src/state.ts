@@ -8,11 +8,10 @@ import { IScoreScreenState } from "./stages/score-screen";
 
 export class State implements IGameStageState, IMainMenuState, IScoreScreenState {
   public stage: Stage;
-  public size: number;
-  public scale: number;
 
   public player: Player;
   public zombies: Zombie[];
+  public score: number;
 
   public setStage(StageType: typeof Stage) {
     this.stage = new StageType();

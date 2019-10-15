@@ -6,11 +6,9 @@ import { canvas } from "../../canvas";
 
 export abstract class Player extends Character {
   protected moveSpeed: number;
-  protected showHealth = true;
 
   public weapon: Weapon;
   public projectiles: Projectile[] = [];
-  public score: number = 0;
 
   constructor() {
     super();
@@ -42,17 +40,16 @@ export abstract class Player extends Character {
         projectile.render();
       }
 
-      // ! Score
-      this.layer.setFont(3, this.primaryColor, "left");
-      this.layer.drawText(new Point(5, 5), `SCORE: ${this.score.toString()}`);
-
-      // ! Ammo
-      this.layer.setFont(3, this.weapon.isReloading ? "#ff0000" : this.weapon.primaryColor, "right");
-      this.layer.drawText(new Point(100 - 5, 100 - 5), `${this.weapon.remainingAmmo}/${this.weapon.maxAmmo}`);
-
+      // ! Reloading
       if (this.weapon.isReloading) {
-        this.layer.setFont(3, "#ff0000", "center");
-        this.layer.drawText(new Point(50, 80), "RELOADING...");
+        const reloadProgressMaxWidth = 20;
+        const timeElapsed = Date.now() - this.weapon.reloadStarted;
+        const reloadProgress = reloadProgressMaxWidth * (1 - timeElapsed / this.weapon.reloadTime);
+
+        this.layer.setFont(2, "#ff0000");
+        this.layer.drawText(new Point(50, 85), "RELOADING");
+        this.layer.setFill("#ff0000");
+        this.layer.drawRect(new Point(50 - reloadProgress / 2, 80), reloadProgress, 2);
       }
     });
 
