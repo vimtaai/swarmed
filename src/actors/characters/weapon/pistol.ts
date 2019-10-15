@@ -8,7 +8,7 @@ export class Pistol extends Weapon {
   public primaryColor = "#cccccc";
 
   public handOffsets = [new Point(0, 0), new Point(0, 0)];
-  public rateOfFire = 100;
+  public rateOfFire = 150;
   public reloadTime = 1000;
   public maxAmmo = 20;
   public remainingAmmo = this.maxAmmo;

@@ -21,8 +21,8 @@ export class GameStage extends Stage {
   protected eventListeners = [
     { type: "keydown", callback: (event: KeyboardEvent) => state.player.handleKeyDown(event) },
     { type: "keyup", callback: (event: KeyboardEvent) => state.player.handleKeyUp(event) },
-    { type: "pointermove", callback: (event: MouseEvent) => state.player.handleMouseMove(event) },
-    { type: "pointerdown", callback: (event: MouseEvent) => state.player.handleClick(event) }
+    { type: "pointerdown", callback: (event: MouseEvent) => state.player.handleMouseDown(event) },
+    { type: "pointerup", callback: (event: MouseEvent) => state.player.handleMouseUp(event) }
   ];
 
   public init() {

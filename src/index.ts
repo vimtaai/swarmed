@@ -1,3 +1,5 @@
+import { Point } from "./utils/point";
+
 import { state } from "./state";
 import { canvas } from "./canvas";
 import { layers } from "./layers";
@@ -29,4 +31,8 @@ addEventListener("load", function() {
   canvas.autoSize();
   state.setStage(MainMenuStage);
   requestAnimationFrame(gameLoop);
+});
+
+addEventListener("pointermove", function(event) {
+  state.mousePosition = new Point(canvas.fromPixels(event.offsetX), canvas.fromPixels(event.offsetY));
 });

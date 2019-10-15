@@ -1,8 +1,11 @@
 import { Point } from "../../utils/point";
+
+import { state } from "../../state";
+import { canvas } from "../../canvas";
+
 import { Character } from "../character";
 import { Weapon } from "./weapon";
 import { Projectile } from "./projectile";
-import { canvas } from "../../canvas";
 
 export abstract class Player extends Character {
   protected moveSpeed: number;
@@ -18,6 +21,12 @@ export abstract class Player extends Character {
   }
 
   public next(dt: number) {
+    this.setFacing(state.mousePosition);
+
+    if (this.weapon.canAutoFire) {
+      this.weapon.fire();
+    }
+
     // ! Projectiles
     for (const projectile of this.projectiles) {
       projectile.next(dt);
@@ -86,18 +95,12 @@ export abstract class Player extends Character {
     }
   }
 
-  public handleMouseMove(event: MouseEvent) {
-    const mouseCoords = new Point(canvas.fromPixels(event.offsetX), canvas.fromPixels(event.offsetY));
-
-    this.setFacing(mouseCoords);
+  public handleMouseDown(event: MouseEvent) {
+    this.weapon.fire();
+    this.weapon.isFiring = true;
   }
 
-  public handleClick(event: MouseEvent) {
-    const mouseCoords = new Point(canvas.fromPixels(event.offsetX), canvas.fromPixels(event.offsetY));
-
-    if (this.weapon.canFire) {
-      const projectile = this.weapon.fire(mouseCoords);
-      this.projectiles.push(projectile);
-    }
+  public handleMouseUp(event: MouseEvent) {
+    this.weapon.isFiring = false;
   }
 }
