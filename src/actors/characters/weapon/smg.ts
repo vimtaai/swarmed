@@ -12,7 +12,7 @@ export class SMG extends Weapon {
   public handOffsets = [new Point(0, 0), new Point(2, 0.2)];
   public rateOfFire = 100;
   public reloadTime = 3000;
-  public maxAmmo = 50;
+  public maxAmmo = 30;
   public remainingAmmo = this.maxAmmo;
 
   public ProjectileType = Bullet9mm;

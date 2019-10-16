@@ -1,6 +1,8 @@
 import { Zombie } from "../zombie";
 
 export class CommonZombie extends Zombie {
+  public static spawnRate = 2;
+
   protected absoluteSpeed = 0.5;
   protected maxHealth = 1;
 

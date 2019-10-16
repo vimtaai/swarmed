@@ -3,6 +3,7 @@ import { Point } from "../../utils/point";
 import { Character } from "../character";
 
 export abstract class Zombie extends Character {
+  public static spawnRate: number;
   protected absoluteSpeed: number;
 
   public damage: number;

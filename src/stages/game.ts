@@ -1,14 +1,17 @@
+import { Point } from "../utils/point";
+
 import { state } from "../state";
 import { Stage } from "../stage";
 import { layers } from "../layers";
+
 import { Zombie } from "../actors/characters/zombie";
-import { Player } from "../actors/characters/player";
 import { CommonZombie } from "../actors/characters/zombies/common";
 import { HulkZombie } from "../actors/characters/zombies/hulk";
+import { RunnerZombie } from "../actors/characters/zombies/runner";
+import { Player } from "../actors/characters/player";
 import { Projectile } from "../actors/characters/projectile";
 
 import { ScoreScreenStage } from "./score-screen";
-import { Point } from "../utils/point";
 
 export interface IGameStageState {
   player: Player;
@@ -32,7 +35,7 @@ export class GameStage extends Stage {
   }
 
   public next(dt: number) {
-    this.createZombie(dt);
+    this.createZombies(dt);
     state.player.next(dt);
 
     for (const zombie of state.zombies) {
@@ -82,20 +85,18 @@ export class GameStage extends Stage {
     layers.ui.drawText(new Point(100 - 5, 100 - 5), ammoLabel);
   }
 
-  protected createZombie(dt: number) {
-    if (Math.random() < this.zombieSpawnRate * dt) {
-      let newZombie: Zombie;
+  protected createZombies(dt: number) {
+    const zombieTypes = [CommonZombie, HulkZombie, RunnerZombie];
 
-      if (Math.random() < 0.1) {
-        newZombie = new HulkZombie();
-      } else {
-        newZombie = new CommonZombie();
+    for (const ZombieType of zombieTypes) {
+      if (Math.random() < ZombieType.spawnRate * dt) {
+        const newZombie = new ZombieType();
+
+        newZombie.setCoords();
+        newZombie.setFacing(state.player.coords);
+
+        state.zombies.push(newZombie);
       }
-
-      newZombie.setCoords();
-      newZombie.setFacing(state.player.coords);
-
-      state.zombies.push(newZombie);
     }
   }
 

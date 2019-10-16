@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "author": "Márton Visnovitz <vimtaai@inf.elte.hu>",
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "clean": "rm -rf dist/*",
+    "start": "npm run clean && parcel index.html",
+    "build": "npm run clean && parcel build index.html"
   },
   "devDependencies": {
     "parcel": "^1.12.4",
