@@ -4,12 +4,13 @@ import { state } from "../../state";
 import { background, ui } from "../../layers";
 
 import { Stage } from "../stage";
+import { Player } from "../characters/player";
+import { Projectile } from "../characters/projectile";
 import { Zombie } from "../characters/zombie";
 import { CommonZombie } from "../characters/zombies/common";
 import { HulkZombie } from "../characters/zombies/hulk";
 import { RunnerZombie } from "../characters/zombies/runner";
-import { Player } from "../characters/player";
-import { Projectile } from "../characters/projectile";
+import { BoomerZombie } from "../characters/zombies/boomer";
 
 import { ScoreScreenStage } from "./score-screen";
 
@@ -86,7 +87,7 @@ export class GameStage extends Stage {
   }
 
   protected createZombies(dt: number) {
-    const zombieTypes = [CommonZombie, HulkZombie, RunnerZombie];
+    const zombieTypes = [CommonZombie, HulkZombie, RunnerZombie, BoomerZombie];
 
     for (const ZombieType of zombieTypes) {
       if (Math.random() < ZombieType.spawnRate * dt) {
