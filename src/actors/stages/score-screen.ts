@@ -3,10 +3,10 @@ import { Point } from "../../utils/point";
 import { state } from "../../state";
 import { background, foreground } from "../../layers";
 
+import { MainMenuStage } from "./main-menu";
+
 import { Stage } from "../stage";
 import { Player } from "../characters/player";
-
-import { MainMenuStage } from "./main-menu";
 
 export interface IScoreScreenState {
   player: Player;

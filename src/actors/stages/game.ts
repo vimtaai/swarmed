@@ -3,6 +3,8 @@ import { Point } from "../../utils/point";
 import { state } from "../../state";
 import { background, ui } from "../../layers";
 
+import { ScoreScreenStage } from "./score-screen";
+
 import { Stage } from "../stage";
 import { Player } from "../characters/player";
 import { Projectile } from "../characters/projectile";
@@ -11,12 +13,13 @@ import { CommonZombie } from "../characters/zombies/common";
 import { HulkZombie } from "../characters/zombies/hulk";
 import { RunnerZombie } from "../characters/zombies/runner";
 import { BoomerZombie } from "../characters/zombies/boomer";
-
-import { ScoreScreenStage } from "./score-screen";
+import { Powerup } from "../characters/powerup";
+import { Heal } from "../characters/powerups/heal";
 
 export interface IGameStageState {
   player: Player;
   zombies: Zombie[];
+  powerups: Powerup[];
   score: number;
 }
 
@@ -32,6 +35,7 @@ export class GameStage extends Stage {
     super();
     state.player.showHealth = true;
     state.zombies = [];
+    state.powerups = [];
     state.score = 0;
   }
 
@@ -42,6 +46,13 @@ export class GameStage extends Stage {
     for (const projectile of state.player.projectiles) {
       if (projectile.coords.outOfGameArea) {
         this.destroyProjectile(projectile);
+      }
+    }
+
+    for (const powerup of state.powerups) {
+      if (powerup.collidesWith(state.player)) {
+        powerup.activate(state.player);
+        this.destroyPowerup(powerup);
       }
     }
 
@@ -80,6 +91,10 @@ export class GameStage extends Stage {
       zombie.render();
     }
 
+    for (const powerup of state.powerups) {
+      powerup.render();
+    }
+
     state.player.render();
 
     // ! Score
@@ -108,9 +123,24 @@ export class GameStage extends Stage {
   }
 
   protected destroyZombie(zombie: Zombie) {
+    const powerupTypes = [Heal];
+
     const index = state.zombies.indexOf(zombie);
     state.zombies.splice(index, 1);
     state.score += zombie.scoreValue;
+
+    for (const PowerupType of powerupTypes) {
+      if (Math.random() < PowerupType.dropRate) {
+        const newPowerup = new PowerupType(zombie);
+
+        state.powerups.push(newPowerup);
+      }
+    }
+  }
+
+  protected destroyPowerup(powerup: Powerup) {
+    const index = state.powerups.indexOf(powerup);
+    state.powerups.splice(index, 1);
   }
 
   protected destroyProjectile(projectile: Projectile) {

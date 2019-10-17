@@ -3,13 +3,13 @@ import { Point } from "../../utils/point";
 import { state } from "../../state";
 import { foreground, background } from "../../layers";
 
+import { GameStage } from "./game";
+
 import { Stage } from "../stage";
 import { Scout } from "../characters/players/scout";
 import { Soldier } from "../characters/players/soldier";
 import { Heavy } from "../characters/players/heavy";
 import { Player } from "../characters/player";
-
-import { GameStage } from "./game";
 
 export interface IMainMenuState {
   player: Player;

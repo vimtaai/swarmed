@@ -2,6 +2,7 @@ import { Point } from "./utils/point";
 
 import { Player } from "./actors/characters/player";
 import { Zombie } from "./actors/characters/zombie";
+import { Powerup } from "./actors/characters/powerup";
 
 import { Stage } from "./actors/stage";
 import { IGameStageState, GameStage } from "./actors/stages/game";
@@ -14,6 +15,7 @@ export class State implements IGameStageState, IMainMenuState, IScoreScreenState
 
   public player: Player;
   public zombies: Zombie[];
+  public powerups: Powerup[];
   public score: number;
 
   public setStage(StageType: typeof GameStage | typeof MainMenuStage | typeof ScoreScreenStage) {
