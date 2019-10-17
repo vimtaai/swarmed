@@ -1,27 +1,28 @@
 import { Point } from "../../utils/point";
-import { canvas } from "../../canvas";
+
 import { Character } from "../character";
-import { Weapon } from "./weapon";
+import { Player } from "./player";
 
 export abstract class Projectile extends Character {
-  protected absoluteSpeed: number;
-  protected trailLength: number;
+  protected abstract trailLength: number;
+  protected showHealth = false;
+  protected trailColor = "rgba(0, 0, 0, 0.5)";
 
-  public damage: number;
+  public abstract damage: number;
+  public maxHealth = 0;
 
   public get speed(): Point {
-    return new Point(Math.cos(this.facing) * this.absoluteSpeed, Math.sin(this.facing) * this.absoluteSpeed);
+    return new Point(Math.cos(this.facing) * this.moveSpeed, Math.sin(this.facing) * this.moveSpeed);
   }
 
-  constructor(weapon: Weapon) {
+  constructor(player: Player) {
     super();
-
-    this.coords = new Point(canvas.fromPixels(weapon.coords.x), canvas.fromPixels(weapon.coords.y));
+    this.coords = Point.clone(player.coords);
   }
 
   draw() {
     super.draw();
-    this.layer.setStroke("rgba(0, 0, 0, 0.5)", 3 * this.radius);
+    this.layer.setStroke(this.trailColor, 2 * this.radius);
     this.layer.drawLine(new Point(0, 0), new Point(-this.trailLength, 0));
   }
 }

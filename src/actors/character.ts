@@ -1,26 +1,27 @@
 import { Point } from "../utils/point";
-import { Layer, layers } from "../layers";
-import { canvas } from "../canvas";
+import { Layer } from "../utils/layer";
+import { Actor } from "../utils/actor";
 
-export abstract class Character {
-  protected speed: Point;
-  protected maxHealth: number;
+import { foreground } from "../layers";
 
-  public name: string;
-  public description: string;
-  public primaryColor: string;
-  public secondaryColor: string;
-  public showHealth: boolean = false;
+export abstract class Character extends Actor {
+  protected abstract primaryColor: string;
+  protected abstract secondaryColor: string;
+  protected abstract showHealth: boolean;
+  protected layer: Layer = foreground;
 
-  public health: number;
-  public layer: Layer;
+  public abstract name: string;
+  public abstract description: string;
+  public abstract moveSpeed: number;
+  public abstract maxHealth: number;
+  public abstract radius: number;
   public coords: Point;
+  public speed: Point;
   public facing: number;
-  public radius: number;
+  public health: number;
 
   constructor() {
-    this.layer = layers.foreground;
-    this.facing = 0;
+    super();
   }
 
   protected withAbsoluteFacing(fn: Function) {
@@ -31,9 +32,9 @@ export abstract class Character {
 
   protected withAbsoluteCoords(fn: Function) {
     this.withAbsoluteFacing(function() {
-      this.layer.context.translate(-this.coords.x, -this.coords.y);
+      this.layer.context.translate(-this.coords.realX, -this.coords.realY);
       fn.call(this);
-      this.layer.context.translate(this.coords.x, this.coords.y);
+      this.layer.context.translate(this.coords.realX, this.coords.realY);
     });
   }
 
@@ -46,8 +47,8 @@ export abstract class Character {
   }
 
   public next(dt: number) {
-    this.coords.x += canvas.toPixels(this.speed.x * dt);
-    this.coords.y += canvas.toPixels(this.speed.y * dt);
+    this.coords.x += this.speed.x * dt;
+    this.coords.y += this.speed.y * dt;
   }
 
   public draw() {
@@ -59,7 +60,7 @@ export abstract class Character {
       return;
     }
 
-    const healthMaxWidth = this.maxHealth / 50;
+    const healthMaxWidth = this.maxHealth / 5;
     const healthWidth = Math.max(healthMaxWidth * (this.health / this.maxHealth), 0);
     const healthColors = ["#ff0000", "#ff8800", "#ffff00", "#00ff55"];
     const healthColorIndex = Math.floor((this.health / this.maxHealth) * (healthColors.length - 1));
@@ -67,15 +68,15 @@ export abstract class Character {
     this.layer.setFill(healthColors[healthColorIndex]);
     this.layer.setStroke("#000000");
     this.withAbsoluteFacing(function() {
-      this.layer.drawRect(new Point(-healthWidth / 2, -this.radius * 1.8), healthWidth, 0.7);
+      this.layer.drawRect(new Point(-healthWidth / 2, -this.radius * 2), healthWidth, 7);
     });
   }
 
   public render() {
-    this.layer.context.translate(this.coords.x, this.coords.y);
+    this.layer.context.translate(this.coords.realX, this.coords.realY);
     this.layer.context.rotate(this.facing);
     this.draw();
     this.layer.context.rotate(-this.facing);
-    this.layer.context.translate(-this.coords.x, -this.coords.y);
+    this.layer.context.translate(-this.coords.realX, -this.coords.realY);
   }
 }

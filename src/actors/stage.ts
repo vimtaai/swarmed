@@ -1,13 +1,11 @@
-import { EventListener } from "./utils/event-listener";
-import { state } from "./state";
+import { Actor } from "../utils/actor";
+import { EventListener } from "../utils/event-listener";
 
-export class Stage {
-  private areEventListenersRegistered: boolean = false;
-  protected eventListeners: EventListener[] = [];
+import { state } from "../state";
 
-  public init() {}
-  public next(dt: number) {}
-  public render() {}
+export abstract class Stage extends Actor {
+  protected abstract eventListeners: EventListener[];
+  protected areEventListenersRegistered: boolean = false;
 
   public registerEventListeners() {
     if (this.areEventListenersRegistered) {

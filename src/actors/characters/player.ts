@@ -1,23 +1,22 @@
 import { Point } from "../../utils/point";
+import { Layer } from "../../utils/layer";
 
 import { state } from "../../state";
-import { canvas } from "../../canvas";
 
 import { Character } from "../character";
-import { Weapon } from "./weapon";
+import { Weapon } from "../weapon";
 import { Projectile } from "./projectile";
 
 export abstract class Player extends Character {
-  protected moveSpeed: number;
-
-  public weapon: Weapon;
+  public abstract weapon: Weapon;
+  public showHealth = true;
+  public speed = new Point(0, 0);
+  public facing = 0;
   public projectiles: Projectile[] = [];
 
-  constructor() {
+  constructor(startingCoords: Point = new Point(50, 50)) {
     super();
-
-    this.coords = new Point(this.layer.width / 2, this.layer.height / 2);
-    this.speed = new Point(0, 0);
+    this.coords = startingCoords;
   }
 
   public next(dt: number) {
@@ -39,9 +38,10 @@ export abstract class Player extends Character {
     // ! Hands
     const baseHandPosition = new Point(this.radius, 0);
     const [leftHand, rightHand] = this.weapon.handOffsets;
+    this.layer.setStroke("#000000");
     this.layer.setFill(this.primaryColor);
-    this.layer.drawArc(Point.add(baseHandPosition, leftHand), this.radius / 3);
-    this.layer.drawArc(Point.add(baseHandPosition, rightHand), this.radius / 3);
+    this.layer.drawArc(baseHandPosition.plus(leftHand), this.radius * 0.4);
+    this.layer.drawArc(baseHandPosition.plus(rightHand), this.radius * 0.4);
 
     this.withAbsoluteCoords(function() {
       // ! Projectiles
@@ -51,14 +51,15 @@ export abstract class Player extends Character {
 
       // ! Reloading
       if (this.weapon.isReloading) {
-        const reloadProgressMaxWidth = 20;
         const timeElapsed = Date.now() - this.weapon.reloadStarted;
+        const reloadProgressMaxWidth = 200;
         const reloadProgress = reloadProgressMaxWidth * (1 - timeElapsed / this.weapon.reloadTime);
 
-        this.layer.setFont(2, "#ff0000");
-        this.layer.drawText(new Point(50, 85), "RELOADING");
+        const reloadCoords = Point.fromPercentage(50, 80).shiftX(-reloadProgress / 2);
+        this.layer.setFont(20, "#ff0000");
+        this.layer.drawText(Point.fromPercentage(50, 85), "RELOADING");
         this.layer.setFill("#ff0000");
-        this.layer.drawRect(new Point(50 - reloadProgress / 2, 80), reloadProgress, 2);
+        this.layer.drawRect(reloadCoords, reloadProgress, 15);
       }
     });
 
@@ -71,13 +72,13 @@ export abstract class Player extends Character {
 
   public handleKeyDown(event: KeyboardEvent) {
     if (event.code === "KeyW") {
-      this.speed.y = -canvas.toPixels(this.moveSpeed);
+      this.speed.y = -Layer.toPixels(this.moveSpeed);
     } else if (event.code === "KeyS") {
-      this.speed.y = canvas.toPixels(this.moveSpeed);
+      this.speed.y = Layer.toPixels(this.moveSpeed);
     } else if (event.code === "KeyA") {
-      this.speed.x = -canvas.toPixels(this.moveSpeed);
+      this.speed.x = -Layer.toPixels(this.moveSpeed);
     } else if (event.code === "KeyD") {
-      this.speed.x = canvas.toPixels(this.moveSpeed);
+      this.speed.x = Layer.toPixels(this.moveSpeed);
     } else if (event.code === "KeyR") {
       this.weapon.reload();
     }

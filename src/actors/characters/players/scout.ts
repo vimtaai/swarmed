@@ -1,20 +1,20 @@
 import { Point } from "../../../utils/point";
 
 import { Player } from "../player";
-import { Pistol } from "../weapon/pistol";
+import { Pistol } from "../../weapons/pistol";
 
 export class Scout extends Player {
-  protected moveSpeed = 2;
-  protected maxHealth = 150;
+  protected primaryColor = "#558800";
+  protected secondaryColor = "#335500";
 
   public name = "SCOUT";
   public description = "THE NIMBLE";
-  public primaryColor = "#558800";
-  public secondaryColor = "#335500";
-
-  public radius: number = 2;
-  public health = this.maxHealth;
+  public radius = 15;
+  public moveSpeed = 150;
+  public maxHealth = 150;
   public weapon = new Pistol(this);
+
+  public health = this.maxHealth;
 
   public draw() {
     // ! Backpack

@@ -1,26 +1,26 @@
 import { Point } from "../../../utils/point";
 
 import { Player } from "../player";
-import { SMG } from "../weapon/smg";
+import { SMG } from "../../weapons/smg";
 
 export class Soldier extends Player {
-  protected moveSpeed = 1.5;
-  protected maxHealth = 200;
+  protected primaryColor = "#228811";
+  protected secondaryColor = "#115500";
 
   public name = "SOLDIER";
   public description = "THE STRONG";
-  public primaryColor = "#228811";
-  public secondaryColor = "#115500";
-
-  public radius = 2.5;
-  public health = this.maxHealth;
+  public radius = 20;
+  public moveSpeed = 125;
+  public maxHealth = 200;
   public weapon = new SMG(this);
+
+  public health = this.maxHealth;
 
   public draw() {
     super.draw();
 
     // ! Helmet
     this.layer.setFill(this.secondaryColor);
-    this.layer.drawArc(new Point(-0.2, 0), this.radius * 0.8);
+    this.layer.drawArc(new Point(-2, 0), this.radius * 0.8);
   }
 }

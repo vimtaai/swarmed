@@ -1,15 +1,15 @@
-import { Point } from "../utils/point";
+import { Point } from "../../utils/point";
 
-import { state } from "../state";
+import { state } from "../../state";
+import { background, ui } from "../../layers";
+
 import { Stage } from "../stage";
-import { layers } from "../layers";
-
-import { Zombie } from "../actors/characters/zombie";
-import { CommonZombie } from "../actors/characters/zombies/common";
-import { HulkZombie } from "../actors/characters/zombies/hulk";
-import { RunnerZombie } from "../actors/characters/zombies/runner";
-import { Player } from "../actors/characters/player";
-import { Projectile } from "../actors/characters/projectile";
+import { Zombie } from "../characters/zombie";
+import { CommonZombie } from "../characters/zombies/common";
+import { HulkZombie } from "../characters/zombies/hulk";
+import { RunnerZombie } from "../characters/zombies/runner";
+import { Player } from "../characters/player";
+import { Projectile } from "../characters/projectile";
 
 import { ScoreScreenStage } from "./score-screen";
 
@@ -20,7 +20,6 @@ export interface IGameStageState {
 }
 
 export class GameStage extends Stage {
-  protected zombieSpawnRate: number = 2;
   protected eventListeners = [
     { type: "keydown", callback: (event: KeyboardEvent) => state.player.handleKeyDown(event) },
     { type: "keyup", callback: (event: KeyboardEvent) => state.player.handleKeyUp(event) },
@@ -28,7 +27,8 @@ export class GameStage extends Stage {
     { type: "pointerup", callback: (event: MouseEvent) => state.player.handleMouseUp(event) }
   ];
 
-  public init() {
+  constructor() {
+    super();
     state.player.showHealth = true;
     state.zombies = [];
     state.score = 0;
@@ -67,7 +67,7 @@ export class GameStage extends Stage {
   }
 
   public render() {
-    layers.background.fill("#4dbd33");
+    background.fill("#4dbd33");
 
     for (const zombie of state.zombies) {
       zombie.render();
@@ -76,13 +76,13 @@ export class GameStage extends Stage {
     state.player.render();
 
     // ! Score
-    layers.ui.setFont(3, "#ffffff", "left");
-    layers.ui.drawText(new Point(5, 5), `SCORE: ${state.score.toString()}`);
+    ui.setFont(25, "#ffffff", "left");
+    ui.drawText(Point.fromPercentage(2, 5), `SCORE: ${state.score.toString()}`);
 
     // ! Ammo
-    const ammoLabel = `${state.player.weapon.remainingAmmo}/${state.player.weapon.maxAmmo}`;
-    layers.ui.setFont(3, state.player.weapon.isReloading ? "#ff0000" : state.player.weapon.primaryColor, "right");
-    layers.ui.drawText(new Point(100 - 5, 100 - 5), ammoLabel);
+    const ammoLabel = `${state.player.weapon.ammo}/${state.player.weapon.maxAmmo}`;
+    ui.setFont(25, state.player.weapon.isReloading ? "#ff0000" : "ffffff", "right");
+    ui.drawText(Point.fromPercentage(98, 95), ammoLabel);
   }
 
   protected createZombies(dt: number) {

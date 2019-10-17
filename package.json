@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rm -rf dist/*",
     "build": "npm run clean && parcel build index.html",
-    "start:dev": "npm run clean && parcel index.html",
+    "start:dev": "parcel index.html",
     "start": "serve dist"
   },
   "dependencies": {

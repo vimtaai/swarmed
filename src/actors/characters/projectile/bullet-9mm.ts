@@ -1,12 +1,13 @@
 import { Projectile } from "../projectile";
 
 export class Bullet9mm extends Projectile {
-  protected absoluteSpeed = 10;
-  protected trailLength = 3;
+  protected primaryColor = "#222222";
+  protected secondaryColor = "#222222";
+  protected trailLength = 10;
 
-  public primaryColor = "#222222";
-  public secondaryColor = "#222222";
-
-  public radius = 0.1;
+  public name = "9MM BULLET";
+  public description = "SMALL BULLET WITH LITTLE DAMAGE";
+  public radius = 1;
+  public moveSpeed = 1000;
   public damage = 25;
 }

@@ -1,29 +1,76 @@
-import { canvas } from "../canvas";
+import { Layer } from "./layer";
 
 export class Point {
+  public static maxX: number = 1280;
+  public static maxY: number = 720;
+
+  public static get aspectRatio(): number {
+    return Point.maxX / Point.maxY;
+  }
+
+  public static clone(point: Point): Point {
+    return new Point(point.x, point.y);
+  }
+
+  public static add(pointA: Point, pointB: Point): Point {
+    return new Point(pointA.x + pointB.x, pointA.y + pointB.y);
+  }
+
+  public static rotate(point: Point, angle: number, center: Point = new Point(0, 0)): Point {
+    const rotationRadius = center.distanceTo(point);
+    const relativePoint = new Point(Math.cos(angle) * rotationRadius, Math.sin(angle) * rotationRadius);
+    return Point.add(center, relativePoint);
+  }
+
+  public static fromPercentage(percX: number, percY: number): Point {
+    return new Point((Point.maxX * percX) / 100, (Point.maxY * percY) / 100);
+  }
+
+  public static fromRealXY(realX: number, realY: number): Point {
+    return new Point(Layer.fromPixels(realX), Layer.fromPixels(realY));
+  }
+
   public x: number;
   public y: number;
 
-  constructor(xPercent: number, yPercent: number) {
-    this.x = canvas.toPixels(xPercent);
-    this.y = canvas.toPixels(yPercent);
+  public get realX() {
+    return Layer.toPixels(this.x);
   }
 
-  public distanceTo(coords: Point): number {
-    return canvas.fromPixels(Math.sqrt((this.x - coords.x) ** 2 + (this.y - coords.y) ** 2));
+  public get realY() {
+    return Layer.toPixels(this.y);
   }
 
-  public facingTo(coords: Point): number {
-    return Math.atan2(coords.y - this.y, coords.x - this.x);
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
   }
 
-  public static add(pointA: Point, pointB: Point) {
-    return new Point(canvas.fromPixels(pointA.x + pointB.x), canvas.fromPixels(pointA.y + pointB.y));
+  public plus(point: Point): Point {
+    return new Point(this.x + point.x, this.y + point.y);
   }
 
-  public static fromFacingAndLength(facing: number, length: number, start: Point = new Point(0, 0)) {
-    const relativePoint = new Point(Math.cos(facing) * length, Math.sin(facing) * length);
+  public minus(point: Point): Point {
+    return new Point(this.x - point.x, this.y - point.y);
+  }
 
-    return Point.add(start, relativePoint);
+  public shiftX(amount: number): Point {
+    return new Point(this.x + amount, this.y);
+  }
+
+  public shiftY(amount: number): Point {
+    return new Point(this.x, this.y + amount);
+  }
+
+  public shiftXY(xAmount: number, yAmount: number): Point {
+    return new Point(this.x + xAmount, this.y + yAmount);
+  }
+
+  public distanceTo(point: Point): number {
+    return Math.sqrt((this.x - point.x) ** 2 + (this.y - point.y) ** 2);
+  }
+
+  public facingTo(point: Point): number {
+    return Math.atan2(point.y - this.y, point.x - this.x);
   }
 }

@@ -1,20 +1,20 @@
 import { Point } from "../../../utils/point";
 
 import { Player } from "../player";
-import { Rifle } from "../weapon/rifle";
+import { Rifle } from "../../weapons/rifle";
 
 export class Heavy extends Player {
-  protected moveSpeed = 1;
-  protected maxHealth = 400;
+  protected primaryColor = "#555588";
+  protected secondaryColor = "#333355";
 
   public name = "HEAVY";
   public description = "THE TOUGH";
-  public primaryColor = "#555588";
-  public secondaryColor = "#333355";
-
-  public radius = 2.8;
-  public health = this.maxHealth;
+  public radius = 20;
+  public moveSpeed = 100;
+  public maxHealth = 400;
   public weapon = new Rifle(this);
+
+  public health = this.maxHealth;
 
   public draw() {
     // ! Armor
