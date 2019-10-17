@@ -1,7 +1,7 @@
 import { Zombie } from "../zombie";
 
 export class BoomerZombie extends Zombie {
-  public static spawnRate = 0.5;
+  public static spawnRate = 0.3;
 
   protected primaryColor = "#aa6666";
   protected secondaryColor = "#bb8888";

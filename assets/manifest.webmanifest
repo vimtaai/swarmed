@@ -1,0 +1,10 @@
+{
+  "short_name": "Surround",
+  "name": "Zombie Surround",
+  "start_url": "/",
+  "background_color": "#000000",
+  "display": "standalone",
+  "orientation": "landscape",
+  "scope": "/",
+  "theme_color": "#55aa33"
+}
