@@ -12,16 +12,6 @@ export class Point {
     return new Point(point.x, point.y);
   }
 
-  public static add(pointA: Point, pointB: Point): Point {
-    return new Point(pointA.x + pointB.x, pointA.y + pointB.y);
-  }
-
-  public static rotate(point: Point, angle: number, center: Point = new Point(0, 0)): Point {
-    const rotationRadius = center.distanceTo(point);
-    const relativePoint = new Point(Math.cos(angle) * rotationRadius, Math.sin(angle) * rotationRadius);
-    return Point.add(center, relativePoint);
-  }
-
   public static fromPercentage(percX: number, percY: number): Point {
     return new Point((Point.maxX * percX) / 100, (Point.maxY * percY) / 100);
   }
@@ -41,6 +31,10 @@ export class Point {
     return Layer.toPixels(this.y);
   }
 
+  public get outOfGameArea() {
+    return this.x < 0 || this.x > Point.maxX || this.y < 0 || this.y > Point.maxY;
+  }
+
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
@@ -52,6 +46,10 @@ export class Point {
 
   public minus(point: Point): Point {
     return new Point(this.x - point.x, this.y - point.y);
+  }
+
+  public times(amount: number): Point {
+    return new Point(this.x * amount, this.y * amount);
   }
 
   public shiftX(amount: number): Point {

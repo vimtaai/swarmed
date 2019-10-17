@@ -39,6 +39,12 @@ export class GameStage extends Stage {
     this.createZombies(dt);
     state.player.next(dt);
 
+    for (const projectile of state.player.projectiles) {
+      if (projectile.coords.outOfGameArea) {
+        this.destroyProjectile(projectile);
+      }
+    }
+
     for (const zombie of state.zombies) {
       zombie.setFacing(state.player.coords);
       zombie.next(dt);

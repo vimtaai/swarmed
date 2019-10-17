@@ -31,7 +31,10 @@ export abstract class Player extends Character {
       projectile.next(dt);
     }
 
-    super.next(dt);
+    const newCoords = this.coords.plus(this.speed.times(dt));
+    if (!newCoords.outOfGameArea) {
+      super.next(dt);
+    }
   }
 
   public draw() {
