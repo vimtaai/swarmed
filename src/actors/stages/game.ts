@@ -1,7 +1,7 @@
 import { Point } from "../../classes/point";
 import { Layer } from "../../classes/layer";
-
 import { EventListener } from "../../classes/event-listener";
+
 import { HealthIndicator } from "../../ui-elements/health-indicator";
 import { ReloadIndicator } from "../../ui-elements/reload-indicator";
 import { ScoreIndicator } from "../../ui-elements/score-indicator";
@@ -21,13 +21,9 @@ import { ScoreScreenStage } from "./score-screen";
 
 import { state } from "../../state";
 import { background } from "../../layers";
-
-export interface IGameStageState {
-  player: Player;
-  zombies: Zombie[];
-  powerups: Powerup[];
-  score: number;
-}
+import { Explodable } from "../../types/explodable";
+import { Explosion } from "../explosion";
+import { removeFromArray } from "../../utils/array";
 
 export class GameStage extends Stage {
   protected uiElements = [new HealthIndicator(), new ReloadIndicator(), new ScoreIndicator(), new AmmoIndicator()];
@@ -43,6 +39,7 @@ export class GameStage extends Stage {
     state.player.showHealth = true;
     state.zombies = [];
     state.powerups = [];
+    state.explosions = [];
     state.score = 0;
   }
 
@@ -63,23 +60,23 @@ export class GameStage extends Stage {
       }
     }
 
+    for (const explosion of state.explosions) {
+      explosion.next(dt);
+
+      if (explosion.isFinished) {
+        this.destroyExplosion(explosion);
+      }
+    }
+
     for (const zombie of state.zombies) {
       zombie.face(state.player.coords);
       zombie.next(dt);
 
       if (zombie.collidesWith(state.player)) {
-        let damage: number = zombie.damage;
-
-        if (state.player.shield > 0) {
-          const damageToHealth = Math.max(damage - state.player.shield, 0);
-          state.player.shield = Math.max(state.player.shield - damage, 0);
-          damage = damageToHealth;
-        }
-
-        state.player.health -= damage;
+        state.player.sufferDamage(zombie.damage);
         this.destroyZombie(zombie);
 
-        if (state.player.health <= 0) {
+        if (state.player.isDead) {
           state.setStage(ScoreScreenStage);
         }
         continue;
@@ -87,15 +84,15 @@ export class GameStage extends Stage {
 
       for (const projectile of state.player.projectiles) {
         if (zombie.collidesWith(projectile)) {
-          zombie.health -= projectile.damage;
+          zombie.sufferDamage(projectile.damage);
           this.destroyProjectile(projectile);
-
-          if (zombie.health <= 0) {
-            this.destroyZombie(zombie);
-            this.createPowerups(zombie.coords);
-            break;
-          }
         }
+      }
+
+      if (zombie.isDead) {
+        this.destroyZombie(zombie);
+        this.createPowerups(zombie.coords);
+        break;
       }
     }
   }
@@ -109,6 +106,10 @@ export class GameStage extends Stage {
 
     for (const powerup of state.powerups) {
       powerup.render();
+    }
+
+    for (const explosion of state.explosions) {
+      explosion.render();
     }
 
     state.player.render();
@@ -180,19 +181,35 @@ export class GameStage extends Stage {
     }
   }
 
-  protected destroyZombie(zombie: Zombie) {
-    const index = state.zombies.indexOf(zombie);
-    state.zombies.splice(index, 1);
+  protected destroyZombie(zombie: Zombie | Zombie & Explodable) {
+    if ("createExplosion" in zombie) {
+      const explosion = zombie.createExplosion();
+      state.explosions.push(explosion);
+    }
+
+    removeFromArray(state.zombies, zombie);
     state.score += zombie.scoreValue;
   }
 
-  protected destroyPowerup(powerup: Powerup) {
-    const index = state.powerups.indexOf(powerup);
-    state.powerups.splice(index, 1);
+  protected destroyProjectile(projectile: Projectile) {
+    removeFromArray(state.player.projectiles, projectile);
   }
 
-  protected destroyProjectile(projectile: Projectile) {
-    const index = state.player.projectiles.indexOf(projectile);
-    state.player.projectiles.splice(index, 1);
+  protected destroyPowerup(powerup: Powerup) {
+    removeFromArray(state.powerups, powerup);
+  }
+
+  protected destroyExplosion(explosion: Explosion) {
+    if (explosion.collidesWith(state.player)) {
+      console.log("damage player");
+      state.player.sufferDamage(explosion.damage);
+    }
+
+    for (const zombie of state.zombies) {
+      if (explosion.collidesWith(zombie)) {
+        zombie.sufferDamage(explosion.damage);
+      }
+    }
+    removeFromArray(state.explosions, explosion);
   }
 }

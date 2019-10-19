@@ -4,17 +4,15 @@ import { Player } from "../player";
 import { Rifle } from "../../weapons/rifle";
 
 export class Heavy extends Player {
-  protected primaryColor = "#555588";
-  protected secondaryColor = "#333355";
-
   public name = "HEAVY";
   public description = "THE TOUGH";
   public radius = 20;
   public moveSpeed = 100;
   public maxHealth = 400;
   public weapon = new Rifle(this);
-
   public health = this.maxHealth;
+  protected primaryColor = "#555588";
+  protected secondaryColor = "#333355";
 
   public render() {
     this.translateToRelative();

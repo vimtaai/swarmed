@@ -1,8 +1,8 @@
-import { UIElement } from "../types/renderable/ui-element";
+import { percentageToColor } from "../utils/color";
 import { Point } from "../classes/point";
+import { UIElement } from "../types/renderable/ui-element";
 
 import { state } from "../state";
-import { percentageToColor } from "../utils/color";
 
 export class HealthIndicator extends UIElement {
   public render() {
@@ -24,7 +24,7 @@ export class HealthIndicator extends UIElement {
       const shieldIndicatorCoords = shieldIndicatorCenter.shiftX(-shieldIndicatorWidth / 2);
       const shieldNumberCoords = shieldIndicatorCenter.shiftY(indicatorHeight / 2);
 
-      this.layer.setFill(percentageToColor(state.player.percentShield, 120, 240));
+      this.layer.setFill(percentageToColor(state.player.percentShield, 240, 120));
       this.layer.drawRect(shieldIndicatorCoords, shieldIndicatorWidth, indicatorHeight);
       this.layer.setFont(18, "#000000");
       this.layer.drawText(shieldNumberCoords, state.player.shield.toString());

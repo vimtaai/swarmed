@@ -4,15 +4,14 @@ import { Powerup } from "../powerup";
 import { Player } from "../player";
 
 export class Heal extends Powerup {
-  public static dropRate = 0.1;
-
-  protected primaryColor = "#20a473";
-  protected secondaryColor = "#ffffff";
+  public static dropRate = 0.05;
 
   public name = "HEAL";
   public description = "GIVES YOU BACK 50 HP";
   public moveSpeed = 0;
   public radius = 18;
+  protected primaryColor = "#20a473";
+  protected secondaryColor = "#ffffff";
 
   public activate(player: Player) {
     const healAmount = 50;

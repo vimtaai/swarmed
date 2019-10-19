@@ -21,6 +21,10 @@ export abstract class Character extends Actor {
     return this.health / this.maxHealth;
   }
 
+  public get isDead(): boolean {
+    return this.health <= 0;
+  }
+
   public render() {
     this.translateToRelative();
     this.rotateToRelative();
@@ -33,7 +37,13 @@ export abstract class Character extends Actor {
     this.translateToAbsolute();
   }
 
-  public collidesWith(actor: Character) {
-    return this.coords.distanceTo(actor.coords) < this.radius + actor.radius;
+  public collidesWith(character: Character) {
+    return this.coords.distanceTo(character.coords) < this.radius + character.radius;
+  }
+
+  public sufferDamage(damageAmount: number): number {
+    const actualDamage = Math.max(damageAmount - this.health, 0);
+    this.health = Math.max(this.health - damageAmount, 0);
+    return actualDamage;
   }
 }

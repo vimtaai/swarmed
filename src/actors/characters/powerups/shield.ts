@@ -4,15 +4,13 @@ import { Powerup } from "../powerup";
 import { Player } from "../player";
 
 export class Shield extends Powerup {
-  public static dropRate = 0.05;
-
-  protected primaryColor = "#2073a4";
-  protected secondaryColor = "#ffffff";
-
+  public static dropRate = 0.02;
   public name = "SHIELD";
   public description = "GIVES YOU 100 SHIELD";
   public moveSpeed = 0;
   public radius = 18;
+  protected primaryColor = "#2073a4";
+  protected secondaryColor = "#ffffff";
 
   public activate(player: Player) {
     const shieldAmount = 100;

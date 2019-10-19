@@ -3,10 +3,6 @@ import { Zombie } from "../zombie";
 export class RunnerZombie extends Zombie {
   public static spawnRate = 0.5;
 
-  protected primaryColor = "#447744";
-  protected secondaryColor = "#557755";
-  protected showHealth = false;
-
   public name = "RUNNER ZOMBIE";
   public description: "EXTREMELY FAST, BUT DOES LITTLE DAMAGE";
   public radius = 13;
@@ -14,6 +10,8 @@ export class RunnerZombie extends Zombie {
   public maxHealth = 1;
   public damage = 5;
   public scoreValue = 2;
-
   public health = this.maxHealth;
+  protected primaryColor = "#447744";
+  protected secondaryColor = "#557755";
+  protected showHealth = false;
 }

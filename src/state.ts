@@ -3,19 +3,21 @@ import { Point } from "./classes/point";
 import { Player } from "./actors/characters/player";
 import { Zombie } from "./actors/characters/zombie";
 import { Powerup } from "./actors/characters/powerup";
+import { Explosion } from "./actors/explosion";
 
 import { Stage } from "./actors/stage";
-import { IGameStageState, GameStage } from "./actors/stages/game";
-import { IMainMenuState, MainMenuStage } from "./actors/stages/main-menu";
-import { IScoreScreenState, ScoreScreenStage } from "./actors/stages/score-screen";
+import { GameStage } from "./actors/stages/game";
+import { MainMenuStage } from "./actors/stages/main-menu";
+import { ScoreScreenStage } from "./actors/stages/score-screen";
 
-export class State implements IGameStageState, IMainMenuState, IScoreScreenState {
+export class State {
   public mousePosition: Point = Point.fromPercentage(50, 50);
   public stage: Stage;
 
   public player: Player;
   public zombies: Zombie[];
   public powerups: Powerup[];
+  public explosions: Explosion[];
   public score: number;
 
   public setStage(StageType: typeof GameStage | typeof MainMenuStage | typeof ScoreScreenStage) {

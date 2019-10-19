@@ -73,4 +73,18 @@ export abstract class Player extends Character {
     this.rotateToAbsolute();
     this.translateToAbsolute();
   }
+
+  public sufferDamage(damageAmount: number) {
+    let damage = damageAmount;
+
+    if (this.shield > 0) {
+      const damageToHealth = Math.max(damage - this.shield, 0);
+      this.shield = Math.max(this.shield - damage, 0);
+      damage = damageToHealth;
+    }
+
+    this.health -= damage;
+
+    return damage;
+  }
 }
