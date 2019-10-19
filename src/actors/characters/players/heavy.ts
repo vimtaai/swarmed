@@ -1,4 +1,4 @@
-import { Point } from "../../../utils/point";
+import { Point } from "../../../classes/point";
 
 import { Player } from "../player";
 import { Rifle } from "../../weapons/rifle";
@@ -16,12 +16,17 @@ export class Heavy extends Player {
 
   public health = this.maxHealth;
 
-  public draw() {
-    // ! Armor
+  public render() {
+    this.translateToRelative();
+    this.rotateToRelative();
+
     this.layer.setStroke("#000000", 0.3);
     this.layer.setFill(this.secondaryColor);
     this.layer.drawArc(new Point(0, 0), this.radius * 1.2);
 
-    super.draw();
+    this.rotateToAbsolute();
+    this.translateToAbsolute();
+
+    super.render();
   }
 }

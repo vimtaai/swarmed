@@ -64,6 +64,10 @@ export class Point {
     return new Point(this.x + xAmount, this.y + yAmount);
   }
 
+  public between(pointA: Point, pointB: Point): boolean {
+    return this.x >= pointA.x && this.x <= pointB.x && this.y >= pointA.y && this.y <= pointB.y;
+  }
+
   public distanceTo(point: Point): number {
     return Math.sqrt((this.x - point.x) ** 2 + (this.y - point.y) ** 2);
   }

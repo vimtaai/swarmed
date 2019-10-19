@@ -1,4 +1,4 @@
-import { Point } from "../../../utils/point";
+import { Point } from "../../../classes/point";
 
 import { Player } from "../player";
 import { Pistol } from "../../weapons/pistol";
@@ -16,12 +16,17 @@ export class Scout extends Player {
 
   public health = this.maxHealth;
 
-  public draw() {
-    // ! Backpack
+  public render() {
+    this.translateToRelative();
+    this.rotateToRelative();
+
     this.layer.setStroke("#000000");
     this.layer.setFill(this.secondaryColor);
     this.layer.drawArc(new Point(-this.radius * 0.6, 0), this.radius * 0.8);
 
-    super.draw();
+    this.rotateToAbsolute();
+    this.translateToAbsolute();
+
+    super.render();
   }
 }

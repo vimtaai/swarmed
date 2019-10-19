@@ -1,7 +1,9 @@
 {
-  "name": "zombies",
+  "name": "swarmed",
   "version": "1.0.0",
   "author": "Márton Visnovitz <vimtaai@inf.elte.hu>",
+  "license": "UNLICENSED",
+  "repository": "github:vimtaai/swarmed",
   "scripts": {
     "clean": "rm -rf dist/*",
     "build": "npm run clean && parcel build index.html",

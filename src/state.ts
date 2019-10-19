@@ -1,4 +1,4 @@
-import { Point } from "./utils/point";
+import { Point } from "./classes/point";
 
 import { Player } from "./actors/characters/player";
 import { Zombie } from "./actors/characters/zombie";

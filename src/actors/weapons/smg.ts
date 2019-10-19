@@ -1,4 +1,4 @@
-import { Point } from "../../utils/point";
+import { Point } from "../../classes/point";
 import { Weapon } from "../weapon";
 import { Bullet9mm } from "../characters/projectile/bullet-9mm";
 

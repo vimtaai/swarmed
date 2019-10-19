@@ -1,7 +1,7 @@
 import { Point } from "./point";
 
 export class Layer {
-  public static defaultFont = "'Press Start 2P'";
+  public static defaultFont = "'PT Sans'";
   public static scaling = 1;
 
   public static get width() {
@@ -53,7 +53,7 @@ export class Layer {
   public setFont(size: number, color: string = "#ffffff", hAlign: CanvasTextAlign = "center") {
     this.setFill(color);
     this.setStroke("#000000");
-    this.context.font = `${Layer.toPixels(size)}px ${Layer.defaultFont}`;
+    this.context.font = `bold ${Layer.toPixels(size)}px ${Layer.defaultFont}`;
     this.context.textAlign = hAlign;
     this.context.textBaseline = "middle";
   }
@@ -69,6 +69,10 @@ export class Layer {
 
   public drawText(coords: Point, text: string) {
     this.context.fillText(text, coords.realX, coords.realY);
+  }
+
+  public drawTextWithOutline(coords: Point, text: string) {
+    this.drawText(coords, text);
     this.context.strokeText(text, coords.realX, coords.realY);
   }
 

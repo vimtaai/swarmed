@@ -1,20 +1,17 @@
-import { Point } from "../../utils/point";
+import { Point } from "../../classes/point";
 
 import { Character } from "../character";
-import { Player } from "./player";
-import { Zombie } from "./zombie";
 
 export abstract class Powerup extends Character {
-  public static dropRate = 0;
-
-  protected showHealth = false;
+  public static dropRate: number;
 
   public maxHealth = 0;
+  protected showHealth = false;
 
-  abstract activate(player: Player);
+  abstract activate(character: Character): void;
 
-  constructor(zombie: Zombie) {
+  constructor(point: Point) {
     super();
-    this.coords = Point.clone(zombie.coords);
+    this.coords = Point.clone(point);
   }
 }

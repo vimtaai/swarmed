@@ -1,10 +1,11 @@
-import { Point } from "./utils/point";
-import { Layer } from "./utils/layer";
+import { Point } from "./classes/point";
+import { Layer } from "./classes/layer";
+
+import { MainMenuStage } from "./actors/stages/main-menu";
+import { TestStage } from "./actors/stages/test";
 
 import { state } from "./state";
 import { background, foreground, overlay, ui } from "./layers";
-
-import { MainMenuStage } from "./actors/stages/main-menu";
 
 let lastRender: number = Date.now();
 
@@ -44,6 +45,10 @@ addEventListener("resize", function() {
   autoSize();
 });
 
+addEventListener("pointermove", function(event: MouseEvent) {
+  state.mousePosition = Point.fromRealXY(event.offsetX, event.offsetY);
+});
+
 addEventListener("load", function() {
   autoSize();
 
@@ -52,6 +57,10 @@ addEventListener("load", function() {
   requestAnimationFrame(gameLoop);
 });
 
-addEventListener("pointermove", function(event: MouseEvent) {
-  state.mousePosition = Point.fromRealXY(event.offsetX, event.offsetY);
+// ! DEBUG
+addEventListener("keydown", function(event: KeyboardEvent) {
+  if (event.code === "F10") {
+    state.setStage(TestStage);
+  }
 });
+// / DEBUG

@@ -1,4 +1,4 @@
-import { Layer } from "./utils/layer";
+import { Layer } from "./classes/layer";
 
 export const background = new Layer("background");
 export const foreground = new Layer("foreground");

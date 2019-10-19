@@ -1,4 +1,4 @@
-import { Point } from "../../../utils/point";
+import { Point } from "../../../classes/point";
 
 import { Player } from "../player";
 import { SMG } from "../../weapons/smg";
@@ -16,11 +16,16 @@ export class Soldier extends Player {
 
   public health = this.maxHealth;
 
-  public draw() {
-    super.draw();
+  public render() {
+    super.render();
 
-    // ! Helmet
+    this.translateToRelative();
+    this.rotateToRelative();
+
     this.layer.setFill(this.secondaryColor);
     this.layer.drawArc(new Point(-2, 0), this.radius * 0.8);
+
+    this.rotateToAbsolute();
+    this.translateToAbsolute();
   }
 }

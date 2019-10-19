@@ -1,11 +1,16 @@
-import { Actor } from "../utils/actor";
-import { EventListener } from "../utils/event-listener";
+import { Renderable } from "../types/renderable";
+import { Nextable } from "../types/nextable";
+import { UIElement } from "../types/renderable/ui-element";
+import { EventListener } from "../classes/event-listener";
 
-import { state } from "../state";
-
-export abstract class Stage extends Actor {
-  protected abstract eventListeners: EventListener[];
+export abstract class Stage implements Renderable, Nextable {
+  protected uiElements: UIElement[] = [];
+  protected eventListeners: EventListener[] = [];
   protected areEventListenersRegistered: boolean = false;
+
+  public abstract render(): void;
+
+  public next(dt: number) {}
 
   public registerEventListeners() {
     if (this.areEventListenersRegistered) {
@@ -13,13 +18,7 @@ export abstract class Stage extends Actor {
     }
 
     for (const eventListener of this.eventListeners) {
-      const thisStage = this;
-      addEventListener(eventListener.type, function(event: Event) {
-        if (state.stage === thisStage) {
-          event.preventDefault();
-          eventListener.callback.call(event.target, event);
-        }
-      });
+      eventListener.listen(this);
     }
 
     this.areEventListenersRegistered = true;
