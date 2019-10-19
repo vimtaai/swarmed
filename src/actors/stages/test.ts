@@ -16,6 +16,7 @@ import { CommonZombie } from "../characters/zombies/common";
 import { HulkZombie } from "../characters/zombies/hulk";
 import { RunnerZombie } from "../characters/zombies/runner";
 import { BoomerZombie } from "../characters/zombies/boomer";
+import { Shield } from "../characters/powerups/shield";
 
 export class TestStage extends Stage {
   protected uiElements = [];
@@ -40,8 +41,9 @@ export class TestStage extends Stage {
     const boomer = new BoomerZombie();
     boomer.coords = new Point(300, 550);
     const heal = new Heal(new Point(500, 250));
+    const shield = new Shield(new Point(500, 350));
 
-    this.actors = [scout, soldier, heavy, common, hulk, runner, boomer, heal];
+    this.actors = [scout, soldier, heavy, common, hulk, runner, boomer, heal, shield];
   }
 
   public render() {

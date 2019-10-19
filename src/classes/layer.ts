@@ -96,4 +96,19 @@ export class Layer {
     this.context.fill();
     this.context.stroke();
   }
+
+  public drawPolygon(...points: Point[]) {
+    if (points.length < 3) {
+      throw new TypeError("A polygon requires at least 3 Points");
+    }
+
+    this.context.beginPath();
+    this.context.moveTo(points[0].realX, points[0].realY);
+    for (const point of points) {
+      this.context.lineTo(point.realX, point.realY);
+    }
+    this.context.closePath();
+    this.context.fill();
+    this.context.stroke();
+  }
 }

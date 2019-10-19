@@ -26,7 +26,6 @@ export class PlayerSelector extends UIElement {
       this.layer.drawRect(rectCoords, PlayerSelector.width, PlayerSelector.height);
     }
 
-    this.player.showHealth = false;
     this.player.coords = this.coords.shiftX(PlayerSelector.width / 4);
     this.player.render();
 

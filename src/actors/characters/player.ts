@@ -7,7 +7,9 @@ import { state } from "../../state";
 
 export abstract class Player extends Character {
   public abstract weapon: Weapon;
-  public showHealth = true;
+  public maxShield: number = 100;
+  public shield: number = 0;
+  public showHealth = false;
   public speed = new Point(0, 0);
   public facing = 0;
   public projectiles: Projectile[] = [];
@@ -15,6 +17,10 @@ export abstract class Player extends Character {
   constructor(startingCoords: Point = new Point(50, 50)) {
     super();
     this.coords = startingCoords;
+  }
+
+  public get percentShield(): number {
+    return this.shield / this.maxShield;
   }
 
   public render() {

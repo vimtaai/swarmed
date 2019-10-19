@@ -8,13 +8,26 @@ export class HealthIndicator extends UIElement {
   public render() {
     const indicatorHeight = 20;
     const indicatorMaxWidth = 500;
-    const indicatorWidth = indicatorMaxWidth * state.player.percentHealth;
-    const indicatorCoords = Point.fromPercentage(50, 93).shiftX(-indicatorWidth / 2);
-    const numberCoords = Point.fromPercentage(50, 93).shiftY(indicatorHeight / 2);
+    const healthIndicatorCenter = Point.fromPercentage(50, 93);
+    const healthIndicatorWidth = indicatorMaxWidth * state.player.percentHealth;
+    const healthIndicatorCoords = healthIndicatorCenter.shiftX(-healthIndicatorWidth / 2);
+    const healthNumberCoords = healthIndicatorCenter.shiftY(indicatorHeight / 2);
 
     this.layer.setFill(percentageToColor(state.player.percentHealth));
-    this.layer.drawRect(indicatorCoords, indicatorWidth, indicatorHeight);
+    this.layer.drawRect(healthIndicatorCoords, healthIndicatorWidth, indicatorHeight);
     this.layer.setFont(18, "#000000");
-    this.layer.drawText(numberCoords, state.player.health.toString());
+    this.layer.drawText(healthNumberCoords, state.player.health.toString());
+
+    if (state.player.shield > 0) {
+      const shieldIndicatorCenter = Point.fromPercentage(50, 93).shiftY(-indicatorHeight * 2);
+      const shieldIndicatorWidth = indicatorMaxWidth * state.player.percentShield;
+      const shieldIndicatorCoords = shieldIndicatorCenter.shiftX(-shieldIndicatorWidth / 2);
+      const shieldNumberCoords = shieldIndicatorCenter.shiftY(indicatorHeight / 2);
+
+      this.layer.setFill(percentageToColor(state.player.percentShield, 120, 240));
+      this.layer.drawRect(shieldIndicatorCoords, shieldIndicatorWidth, indicatorHeight);
+      this.layer.setFont(18, "#000000");
+      this.layer.drawText(shieldNumberCoords, state.player.shield.toString());
+    }
   }
 }

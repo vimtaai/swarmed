@@ -2,7 +2,7 @@ import { Point } from "./classes/point";
 import { Layer } from "./classes/layer";
 
 import { MainMenuStage } from "./actors/stages/main-menu";
-import { TestStage } from "./actors/stages/test";
+// import { TestStage } from "./actors/stages/test";
 
 import { state } from "./state";
 import { background, foreground, overlay, ui } from "./layers";
@@ -58,9 +58,9 @@ addEventListener("load", function() {
 });
 
 // ! DEBUG
-addEventListener("keydown", function(event: KeyboardEvent) {
-  if (event.code === "F10") {
-    state.setStage(TestStage);
-  }
-});
+// addEventListener("keydown", function(event: KeyboardEvent) {
+//   if (event.code === "F10") {
+//     state.setStage(TestStage);
+//   }
+// });
 // / DEBUG

@@ -16,7 +16,6 @@ export class Heal extends Powerup {
 
   public activate(player: Player) {
     const healAmount = 50;
-
     player.health = Math.min(player.health + healAmount, player.maxHealth);
   }
 

@@ -15,6 +15,7 @@ import { RunnerZombie } from "../characters/zombies/runner";
 import { BoomerZombie } from "../characters/zombies/boomer";
 import { Powerup } from "../characters/powerup";
 import { Heal } from "../characters/powerups/heal";
+import { Shield } from "../characters/powerups/shield";
 import { Stage } from "../stage";
 import { ScoreScreenStage } from "./score-screen";
 
@@ -67,7 +68,15 @@ export class GameStage extends Stage {
       zombie.next(dt);
 
       if (zombie.collidesWith(state.player)) {
-        state.player.health -= zombie.damage;
+        let damage: number = zombie.damage;
+
+        if (state.player.shield > 0) {
+          const damageToHealth = Math.max(damage - state.player.shield, 0);
+          state.player.shield = Math.max(state.player.shield - damage, 0);
+          damage = damageToHealth;
+        }
+
+        state.player.health -= damage;
         this.destroyZombie(zombie);
 
         if (state.player.health <= 0) {
@@ -160,7 +169,7 @@ export class GameStage extends Stage {
   }
 
   protected createPowerups(point: Point) {
-    const powerupTypes = [Heal];
+    const powerupTypes = [Heal, Shield];
 
     for (const PowerupType of powerupTypes) {
       if (Math.random() < PowerupType.dropRate) {
