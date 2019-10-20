@@ -6,14 +6,10 @@ import { HealthIndicator } from "../../ui-elements/health-indicator";
 import { ReloadIndicator } from "../../ui-elements/reload-indicator";
 import { ScoreIndicator } from "../../ui-elements/score-indicator";
 import { AmmoIndicator } from "../../ui-elements/ammo-indicator";
-import { Player } from "../characters/player";
-import { Projectile } from "../characters/projectile";
-import { Zombie } from "../characters/zombie";
 import { CommonZombie } from "../characters/zombies/common";
 import { HulkZombie } from "../characters/zombies/hulk";
 import { RunnerZombie } from "../characters/zombies/runner";
 import { BoomerZombie } from "../characters/zombies/boomer";
-import { Powerup } from "../characters/powerup";
 import { Heal } from "../characters/powerups/heal";
 import { Shield } from "../characters/powerups/shield";
 import { Stage } from "../stage";
@@ -21,12 +17,17 @@ import { ScoreScreenStage } from "./score-screen";
 
 import { state } from "../../state";
 import { background } from "../../layers";
-import { Explodable } from "../../types/explodable";
-import { Explosion } from "../explosion";
-import { removeFromArray } from "../../utils/array";
+import { Abberation } from "../characters/bosses/abberation";
+import { BossIndicator } from "../../ui-elements/boss-indicator";
 
 export class GameStage extends Stage {
-  protected uiElements = [new HealthIndicator(), new ReloadIndicator(), new ScoreIndicator(), new AmmoIndicator()];
+  protected uiElements = [
+    new HealthIndicator(),
+    new ReloadIndicator(),
+    new ScoreIndicator(),
+    new AmmoIndicator(),
+    new BossIndicator()
+  ];
   protected eventListeners = [
     new EventListener("keydown", (e: KeyboardEvent) => this.handleKeyDown(e)),
     new EventListener("keyup", (e: KeyboardEvent) => this.handleKeyUp(e)),
@@ -40,41 +41,52 @@ export class GameStage extends Stage {
     state.zombies = [];
     state.powerups = [];
     state.explosions = [];
+    state.boss = null;
     state.score = 0;
+
+    setTimeout(function() {
+      state.boss = new Abberation();
+      state.boss.spawn();
+    }, 60000);
   }
 
   public next(dt: number) {
     this.createZombies(dt);
     state.player.next(dt);
 
-    for (const projectile of state.player.projectiles) {
-      if (projectile.coords.outOfGameArea) {
-        this.destroyProjectile(projectile);
-      }
-    }
+    this.nextExplosions(dt);
+    this.nextPowerups(dt);
 
+    this.nextBoss(dt);
+    this.nextZombies(dt);
+  }
+
+  public nextPowerups(dt: number) {
     for (const powerup of state.powerups) {
       if (powerup.collidesWith(state.player)) {
         powerup.activate(state.player);
-        this.destroyPowerup(powerup);
+        state.destroyPowerup(powerup);
       }
     }
+  }
 
+  public nextExplosions(dt: number) {
     for (const explosion of state.explosions) {
       explosion.next(dt);
 
       if (explosion.isFinished) {
-        this.destroyExplosion(explosion);
+        state.destroyExplosion(explosion);
       }
     }
+  }
 
+  public nextZombies(dt: number) {
     for (const zombie of state.zombies) {
-      zombie.face(state.player.coords);
       zombie.next(dt);
 
       if (zombie.collidesWith(state.player)) {
         state.player.sufferDamage(zombie.damage);
-        this.destroyZombie(zombie);
+        state.destroyZombie(zombie);
 
         if (state.player.isDead) {
           state.setStage(ScoreScreenStage);
@@ -83,22 +95,59 @@ export class GameStage extends Stage {
       }
 
       for (const projectile of state.player.projectiles) {
-        if (zombie.collidesWith(projectile)) {
+        if (projectile.collidesWith(zombie)) {
           zombie.sufferDamage(projectile.damage);
-          this.destroyProjectile(projectile);
+          state.player.destroyProjectile(projectile);
         }
       }
 
       if (zombie.isDead) {
-        this.destroyZombie(zombie);
+        state.destroyZombie(zombie);
         this.createPowerups(zombie.coords);
         break;
       }
     }
   }
 
+  public nextBoss(dt: number) {
+    if (!state.boss) {
+      return;
+    }
+
+    state.boss.next(dt);
+
+    if (state.boss.collidesWith(state.player)) {
+      state.player.sufferDamage(state.boss.damage);
+      return;
+    }
+
+    for (const projectile of state.boss.projectiles) {
+      if (projectile.collidesWith(state.player)) {
+        state.player.sufferDamage(projectile.damage);
+        state.boss.destroyProjectile(projectile);
+      }
+    }
+
+    for (const projectile of state.player.projectiles) {
+      if (projectile.collidesWith(state.boss)) {
+        state.boss.sufferDamage(projectile.damage);
+        state.player.destroyProjectile(projectile);
+      }
+    }
+
+    if (state.boss.isDead) {
+      state.boss = null;
+    }
+  }
+
   public render() {
     background.fill("#4dbd33");
+
+    state.player.render();
+
+    if (state.boss) {
+      state.boss.render();
+    }
 
     for (const zombie of state.zombies) {
       zombie.render();
@@ -112,10 +161,35 @@ export class GameStage extends Stage {
       explosion.render();
     }
 
-    state.player.render();
-
     for (const uiElement of this.uiElements) {
       uiElement.render();
+    }
+  }
+
+  public createZombies(dt: number) {
+    const zombieTypes = [CommonZombie, HulkZombie, RunnerZombie, BoomerZombie];
+
+    for (const ZombieType of zombieTypes) {
+      if (Math.random() < ZombieType.spawnRate * dt) {
+        const newZombie = new ZombieType();
+
+        newZombie.spawn();
+        newZombie.face(state.player.coords);
+
+        state.zombies.push(newZombie);
+      }
+    }
+  }
+
+  public createPowerups(point: Point) {
+    const powerupTypes = [Heal, Shield];
+
+    for (const PowerupType of powerupTypes) {
+      if (Math.random() < PowerupType.dropRate) {
+        const newPowerup = new PowerupType(point);
+
+        state.powerups.push(newPowerup);
+      }
     }
   }
 
@@ -152,64 +226,5 @@ export class GameStage extends Stage {
 
   public handleMouseUp(event: MouseEvent) {
     state.player.weapon.isFiring = false;
-  }
-
-  protected createZombies(dt: number) {
-    const zombieTypes = [CommonZombie, HulkZombie, RunnerZombie, BoomerZombie];
-
-    for (const ZombieType of zombieTypes) {
-      if (Math.random() < ZombieType.spawnRate * dt) {
-        const newZombie = new ZombieType();
-
-        newZombie.spawn();
-        newZombie.face(state.player.coords);
-
-        state.zombies.push(newZombie);
-      }
-    }
-  }
-
-  protected createPowerups(point: Point) {
-    const powerupTypes = [Heal, Shield];
-
-    for (const PowerupType of powerupTypes) {
-      if (Math.random() < PowerupType.dropRate) {
-        const newPowerup = new PowerupType(point);
-
-        state.powerups.push(newPowerup);
-      }
-    }
-  }
-
-  protected destroyZombie(zombie: Zombie | Zombie & Explodable) {
-    if ("createExplosion" in zombie) {
-      const explosion = zombie.createExplosion();
-      state.explosions.push(explosion);
-    }
-
-    removeFromArray(state.zombies, zombie);
-    state.score += zombie.scoreValue;
-  }
-
-  protected destroyProjectile(projectile: Projectile) {
-    removeFromArray(state.player.projectiles, projectile);
-  }
-
-  protected destroyPowerup(powerup: Powerup) {
-    removeFromArray(state.powerups, powerup);
-  }
-
-  protected destroyExplosion(explosion: Explosion) {
-    if (explosion.collidesWith(state.player)) {
-      console.log("damage player");
-      state.player.sufferDamage(explosion.damage);
-    }
-
-    for (const zombie of state.zombies) {
-      if (explosion.collidesWith(zombie)) {
-        zombie.sufferDamage(explosion.damage);
-      }
-    }
-    removeFromArray(state.explosions, explosion);
   }
 }

@@ -3,6 +3,8 @@ import { Point } from "../../classes/point";
 import { Character } from "../character";
 import { percentageToColor } from "../../utils/color";
 
+import { state } from "../../state";
+
 export abstract class Zombie extends Character {
   public static spawnRate: number;
 
@@ -15,6 +17,11 @@ export abstract class Zombie extends Character {
     return new Point(xSpeed, ySpeed);
   }
 
+  public next(dt: number) {
+    this.face(state.player.coords);
+    super.next(dt);
+  }
+
   public render() {
     this.renderHands();
     super.render();
@@ -25,6 +32,7 @@ export abstract class Zombie extends Character {
     this.translateToRelative();
     this.rotateToRelative();
 
+    this.layer.setStroke(this.outlineColor);
     this.layer.setFill(this.secondaryColor);
     this.layer.drawArc(new Point(this.radius * 0.8, -this.radius * 0.8), this.radius * 0.3);
     this.layer.drawArc(new Point(this.radius * 0.8, this.radius * 0.8), this.radius * 0.3);

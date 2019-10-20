@@ -1,18 +1,21 @@
+import { removeFromArray } from "../../utils/array";
 import { Point } from "../../classes/point";
+
 import { Character } from "../character";
 import { Weapon } from "../weapon";
 import { Projectile } from "./projectile";
+import { ScoreScreenStage } from "../stages/score-screen";
 
 import { state } from "../../state";
 
 export abstract class Player extends Character {
   public abstract weapon: Weapon;
+  public projectiles: Projectile[] = [];
   public maxShield: number = 100;
   public shield: number = 0;
   public showHealth = false;
   public speed = new Point(0, 0);
   public facing = 0;
-  public projectiles: Projectile[] = [];
 
   constructor(startingCoords: Point = new Point(50, 50)) {
     super();
@@ -24,12 +27,19 @@ export abstract class Player extends Character {
   }
 
   public render() {
+    this.renderProjectiles();
+    this.renderHands();
+    this.renderWeapon();
+    super.render();
+  }
+
+  public renderProjectiles() {
     for (const projectile of this.projectiles) {
       projectile.render();
     }
+  }
 
-    this.renderHands();
-
+  public renderWeapon() {
     this.translateToRelative();
     this.rotateToRelative();
 
@@ -37,25 +47,6 @@ export abstract class Player extends Character {
 
     this.rotateToAbsolute();
     this.translateToAbsolute();
-
-    super.render();
-  }
-
-  public next(dt: number) {
-    this.face(state.mousePosition);
-
-    if (this.weapon.canAutoFire) {
-      this.weapon.fire();
-    }
-
-    for (const projectile of this.projectiles) {
-      projectile.next(dt);
-    }
-
-    const newCoords = this.coords.plus(this.speed.times(dt));
-    if (!newCoords.outOfGameArea) {
-      super.next(dt);
-    }
   }
 
   public renderHands() {
@@ -74,6 +65,35 @@ export abstract class Player extends Character {
     this.translateToAbsolute();
   }
 
+  public next(dt: number) {
+    this.face(state.mousePosition);
+
+    if (this.weapon.canAutoFire) {
+      this.weapon.fire();
+    }
+
+    this.nextProjectiles(dt);
+
+    const newCoords = this.coords.plus(this.speed.times(dt));
+    if (!newCoords.outOfGameArea) {
+      super.next(dt);
+    }
+  }
+
+  public nextProjectiles(dt: number) {
+    for (const projectile of this.projectiles) {
+      projectile.next(dt);
+
+      if (projectile.coords.outOfGameArea) {
+        this.destroyProjectile(projectile);
+      }
+    }
+  }
+
+  public destroyProjectile(projectile: Projectile) {
+    removeFromArray(this.projectiles, projectile);
+  }
+
   public sufferDamage(damageAmount: number) {
     let damage = damageAmount;
 
@@ -84,6 +104,10 @@ export abstract class Player extends Character {
     }
 
     this.health -= damage;
+
+    if (this.isDead) {
+      state.setStage(ScoreScreenStage);
+    }
 
     return damage;
   }

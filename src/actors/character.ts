@@ -11,10 +11,10 @@ export abstract class Character extends Actor {
   public abstract radius: number;
   public abstract maxHealth: number;
   public health: number;
-
+  protected abstract showHealth: boolean;
   protected abstract primaryColor: string;
   protected abstract secondaryColor: string;
-  protected abstract showHealth: boolean;
+  protected outlineColor: string = "#000000";
   protected layer: Layer = foreground;
 
   public get percentHealth(): number {
@@ -29,7 +29,7 @@ export abstract class Character extends Actor {
     this.translateToRelative();
     this.rotateToRelative();
 
-    this.layer.setStroke("#000000");
+    this.layer.setStroke(this.outlineColor);
     this.layer.setFill(this.primaryColor);
     this.layer.drawArc(new Point(0, 0), this.radius);
 
@@ -45,5 +45,12 @@ export abstract class Character extends Actor {
     const actualDamage = Math.max(damageAmount - this.health, 0);
     this.health = Math.max(this.health - damageAmount, 0);
     return actualDamage;
+  }
+
+  public recieveHeal(healAmount: number): number {
+    const healthBefore = this.health;
+    this.health = Math.min(this.health + healAmount, this.maxHealth);
+    const actualHeal = this.health - healthBefore;
+    return actualHeal;
   }
 }

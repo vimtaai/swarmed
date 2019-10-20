@@ -12,10 +12,10 @@ export class Heal extends Powerup {
   public radius = 18;
   protected primaryColor = "#20a473";
   protected secondaryColor = "#ffffff";
+  protected healAmount = 50;
 
   public activate(player: Player) {
-    const healAmount = 50;
-    player.health = Math.min(player.health + healAmount, player.maxHealth);
+    player.recieveHeal(this.healAmount);
   }
 
   public render() {

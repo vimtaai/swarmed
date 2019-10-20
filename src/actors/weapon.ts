@@ -4,7 +4,7 @@ import { Renderable } from "../types/renderable";
 
 import { foreground } from "../layers";
 
-import { Player } from "./characters/player";
+import { Player as Character } from "./characters/player";
 
 export abstract class Weapon implements Renderable {
   public abstract isAutomatic: boolean;
@@ -15,24 +15,23 @@ export abstract class Weapon implements Renderable {
   public abstract handOffsets: Point[];
   public isFiring: boolean = false;
   public ammo: number = 0;
-
   protected abstract length: number;
   protected abstract width: number;
   protected abstract primaryColor: string;
   protected layer: Layer = foreground;
-  protected player: Player;
+  protected owner: Character;
   protected lastFire: number = 0;
   protected reloadStarted: number = 0;
   protected reloadTimer: number = 0;
 
-  public constructor(player: Player) {
-    this.player = player;
+  public constructor(owner: Character) {
+    this.owner = owner;
   }
 
   public render() {
     this.layer.setStroke("#000000");
     this.layer.setFill(this.primaryColor);
-    this.layer.drawRect(new Point(this.player.radius, -this.width / 2), this.length, this.width);
+    this.layer.drawRect(new Point(this.owner.radius, -this.width / 2), this.length, this.width);
   }
 
   public get canFire(): boolean {
@@ -71,9 +70,9 @@ export abstract class Weapon implements Renderable {
 
   public fire() {
     if (this.canFire && this.ammo > 0) {
-      const projectile = new this.ProjectileType(this.player);
+      const projectile = new this.ProjectileType(this.owner);
 
-      projectile.facing = this.player.facing;
+      projectile.facing = this.owner.facing;
       this.ammo--;
       this.lastFire = Date.now();
 
@@ -81,7 +80,7 @@ export abstract class Weapon implements Renderable {
         this.reload();
       }
 
-      this.player.projectiles.push(projectile);
+      this.owner.projectiles.push(projectile);
     }
   }
 }
