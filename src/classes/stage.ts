@@ -7,12 +7,20 @@ import { state } from "../state";
 export abstract class Stage implements Renderable, Nextable {
   protected layers: { [name: string]: Layer } = {};
   protected eventListeners: { [type: string]: (event: Event) => void } = {};
+  protected uiElements: { [name: string]: UIElement } = {};
   protected areEventListenersRegistered: boolean = false;
-  protected uiElements: UIElement[] = [];
 
   public abstract render(): void;
 
   public next(dt: number) {}
+
+  public renderUiElements(layer: Layer) {
+    for (const uiElementName in this.uiElements) {
+      const uiElement = this.uiElements[uiElementName];
+
+      uiElement.render(layer);
+    }
+  }
 
   public clearLayers(): void {
     for (const layerName in this.layers) {

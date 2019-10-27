@@ -57,7 +57,7 @@ addEventListener("load", function() {
 // ! DEBUG
 addEventListener("keydown", function(event: KeyboardEvent) {
   if (event.code === "F10" && !(state.stage instanceof TestStage)) {
-    //state.setStage(TestStage);
+    state.setStage(new TestStage());
   }
 });
 // / DEBUG

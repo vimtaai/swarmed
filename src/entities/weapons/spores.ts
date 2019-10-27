@@ -2,6 +2,7 @@ import { Point } from "../../classes/point";
 import { Weapon } from "../weapon";
 import { Spore } from "../characters/projectile/spore";
 import { Layer } from "../../classes/layer";
+import { Character } from "../character";
 
 export class Spores extends Weapon {
   public isAutomatic = true;
@@ -13,12 +14,13 @@ export class Spores extends Weapon {
   public ammo = this.maxAmmo;
   public isFiring = true;
   protected length = 0;
-  protected width = this.owner.radius * (2 / 3);
+  protected width = 40;
   protected primaryColor = "#75912d";
 
   public render(layer: Layer) {
     layer.setStroke("transparent");
     layer.setFill(this.primaryColor);
-    layer.drawArc(new Point(this.owner.radius * (3 / 4), 0), this.width);
+    console.log(this.width);
+    layer.drawArc(new Point(40, 0), this.width);
   }
 }

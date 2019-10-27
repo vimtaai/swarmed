@@ -2,6 +2,8 @@ import { Point } from "../classes/point";
 import { Layer } from "../classes/layer";
 import { Stage } from "../classes/stage";
 
+import { RestartButton } from "../entities/ui-elements/restart-button";
+
 import { MainMenuStage } from "../stages/main-menu";
 
 import { state } from "../state";
@@ -11,7 +13,10 @@ export class ScoreScreenStage extends Stage {
     main: new Layer()
   };
   protected eventListeners = {
-    keydown: (e: KeyboardEvent) => this.handleKeyDown(e)
+    mousedown: (e: MouseEvent) => this.handleMouseDown(e)
+  };
+  protected uiElements = {
+    restartButton: new RestartButton()
   };
 
   public render() {
@@ -23,11 +28,12 @@ export class ScoreScreenStage extends Stage {
 
     this.layers.main.setFont(25, "#ffffff");
     this.layers.main.drawText(Point.fromPercentage(50, 50), `YOUR FINAL SCORE: ${state.score}`);
-    this.layers.main.drawText(Point.fromPercentage(50, 70), "PRESS SPACE TO RESTART");
+
+    this.renderUiElements(this.layers.main);
   }
 
-  protected handleKeyDown(event: KeyboardEvent) {
-    if (event.code === "Space") {
+  protected handleMouseDown(event: MouseEvent) {
+    if (this.uiElements.restartButton.isHovered) {
       state.setStage(new MainMenuStage());
     }
   }

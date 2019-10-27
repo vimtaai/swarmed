@@ -31,13 +31,13 @@ export class GameStage extends Stage {
     pointerdown: (e: MouseEvent) => this.handleMouseDown(e),
     pointerup: (e: MouseEvent) => this.handleMouseUp(e)
   };
-  protected uiElements = [
-    new HealthIndicator(),
-    new ReloadIndicator(),
-    new ScoreIndicator(),
-    new AmmoIndicator(),
-    new BossIndicator()
-  ];
+  protected uiElements = {
+    healthIndicator: new HealthIndicator(),
+    reloadIndicator: new ReloadIndicator(),
+    scoreIndicator: new ScoreIndicator(),
+    ammoIndicator: new AmmoIndicator(),
+    bossIndicator: new BossIndicator()
+  };
 
   protected bossTimer: number = Date.now();
 
@@ -71,13 +71,14 @@ export class GameStage extends Stage {
   public render() {
     this.layers.back.fill("#4dbd33");
 
+    state.projectiles.forEach(projectile => projectile.renderRelative(this.layers.main));
     state.player.forEach(player => player.renderRelative(this.layers.main));
     state.bosses.forEach(boss => boss.renderRelative(this.layers.main));
     state.zombies.forEach(zombie => zombie.renderRelative(this.layers.main));
     state.powerups.forEach(powerup => powerup.renderRelative(this.layers.main));
     state.explosions.forEach(explosion => explosion.renderRelative(this.layers.main));
-    state.projectiles.forEach(projectile => projectile.renderRelative(this.layers.main));
-    this.uiElements.forEach(uiElement => uiElement.render(this.layers.main));
+
+    this.renderUiElements(this.layers.hud);
   }
 
   public nextPlayers(dt: number) {

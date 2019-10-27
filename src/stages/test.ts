@@ -25,7 +25,7 @@ export class TestStage extends Stage {
   protected eventListeners = {
     keydown: (e: KeyboardEvent) => this.handleKeyDown(e)
   };
-  protected uiElements = [];
+
   protected actors: Actor[] = [];
   protected selectedPlayerOption: Player;
 
@@ -58,12 +58,8 @@ export class TestStage extends Stage {
     this.layers.main.setFont(60, "#000000");
     this.layers.main.drawText(Point.fromPercentage(50, 10), "TEST STAGE!");
 
-    for (const uiElement of this.uiElements) {
-      uiElement.render();
-    }
-
     for (const actor of this.actors) {
-      actor.render(this.layers.main);
+      actor.renderRelative(this.layers.main);
     }
   }
 
