@@ -6,10 +6,10 @@ import { state } from "../../state";
 
 export class ReloadIndicator extends UIElement {
   public render(layer: Layer) {
-    if (state.player.weapon.isReloading) {
+    if (state.localPlayer.weapon.isReloading) {
       const indicatorHeight = 15;
       const indicatorMaxWidth = 200;
-      const indicatorWidth = indicatorMaxWidth * state.player.weapon.reloadProgress;
+      const indicatorWidth = indicatorMaxWidth * state.localPlayer.weapon.reloadProgress;
       const indicatorCoords = Point.fromPercentage(50, 80).shiftX(-indicatorWidth / 2);
 
       layer.setFont(20, "#ff0000");

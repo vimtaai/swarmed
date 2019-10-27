@@ -11,6 +11,7 @@
     "start": "serve dist"
   },
   "dependencies": {
+    "classes": "^0.3.0",
     "serve": "^11.2.0"
   },
   "devDependencies": {

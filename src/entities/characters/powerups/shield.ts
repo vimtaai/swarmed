@@ -21,8 +21,6 @@ export class Shield extends Powerup {
   public render(layer: Layer) {
     super.render(layer);
 
-    this.translateToRelative(layer);
-
     layer.setStroke("transparent", 0);
     layer.setFill(this.secondaryColor);
     layer.drawArc(new Point(0, 0), this.radius - 4);
@@ -30,7 +28,5 @@ export class Shield extends Powerup {
     layer.drawPolygon(new Point(-8, -8), new Point(8, -8), new Point(8, 4), new Point(0, 10), new Point(-8, 4));
     layer.setFill("rgba(0, 0, 0, 0.2)");
     layer.drawPolygon(new Point(-8, -8), new Point(0, -8), new Point(0, 10), new Point(-8, 4));
-
-    this.translateToAbsolute(layer);
   }
 }

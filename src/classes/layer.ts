@@ -40,6 +40,42 @@ export class Layer {
     root.append(this.canvas);
   }
 
+  public withAbsolutePosition(point: Point, render: () => void) {
+    this.context.translate(-point.realX, -point.realY);
+    render();
+    this.context.translate(point.realX, point.realY);
+  }
+
+  public withAbsoluteFacing(facing: number, render: () => void) {
+    this.context.rotate(-facing);
+    render();
+    this.context.rotate(facing);
+  }
+
+  public withAbsoluteCenterAndFacing(point: Point, facing: number, render: () => void) {
+    this.withAbsoluteFacing(facing, () => {
+      this.withAbsolutePosition(point, render);
+    });
+  }
+
+  public withRelativeCenter(point: Point, render: () => void) {
+    this.context.translate(point.realX, point.realY);
+    render();
+    this.context.translate(-point.realX, -point.realY);
+  }
+
+  public withRelativeFacing(facing: number, render: () => void) {
+    this.context.rotate(facing);
+    render();
+    this.context.rotate(-facing);
+  }
+
+  public withCenterAndFacing(point: Point, facing: number, render: () => void) {
+    this.withRelativeCenter(point, () => {
+      this.withRelativeFacing(facing, render);
+    });
+  }
+
   public setStroke(color: string = "#000000", width: number = 2) {
     this.context.strokeStyle = color;
     this.context.lineWidth = Layer.toPixels(width);

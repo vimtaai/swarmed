@@ -16,15 +16,9 @@ export class Scout extends Player {
   protected secondaryColor = "#335500";
 
   public render(layer: Layer) {
-    this.translateToRelative(layer);
-    this.rotateToRelative(layer);
-
     layer.setStroke("#000000");
     layer.setFill(this.secondaryColor);
     layer.drawArc(new Point(-this.radius * 0.6, 0), this.radius * 0.8);
-
-    this.rotateToAbsolute(layer);
-    this.translateToAbsolute(layer);
 
     super.render(layer);
   }

@@ -13,12 +13,12 @@ export class Spores extends Weapon {
   public ammo = this.maxAmmo;
   public isFiring = true;
   protected length = 0;
-  protected width = 30;
+  protected width = this.owner.radius * (2 / 3);
   protected primaryColor = "#75912d";
 
   public render(layer: Layer) {
     layer.setStroke("transparent");
     layer.setFill(this.primaryColor);
-    layer.drawArc(new Point(50, 0), this.width);
+    layer.drawArc(new Point(this.owner.radius * (3 / 4), 0), this.width);
   }
 }

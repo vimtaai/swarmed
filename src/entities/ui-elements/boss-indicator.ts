@@ -10,13 +10,13 @@ export class BossIndicator extends UIElement {
   public render(layer: Layer) {
     let offsetIndex = 0;
 
-    state.boss.forEach(boss => {
+    state.bosses.forEach(boss => {
       const indicatorHeight = 20;
       const indicatorMaxWidth = 500;
-      const healthIndicatorCenter = Point.fromPercentage(50, 3);
+      const healthIndicatorCenter = Point.fromPercentage(50, 3).shiftY(indicatorHeight * 2 * offsetIndex);
       const healthIndicatorWidth = indicatorMaxWidth * boss.percentHealth;
       const healthIndicatorCoords = healthIndicatorCenter.shiftX(-healthIndicatorWidth / 2);
-      const healthNumberCoords = healthIndicatorCenter.shiftY(indicatorHeight / 2 + indicatorHeight * 2 * offsetIndex);
+      const healthNumberCoords = healthIndicatorCenter.shiftY(indicatorHeight / 2);
 
       layer.setFill(percentageToColor(boss.percentHealth, 0, 120));
       layer.drawRect(healthIndicatorCoords, healthIndicatorWidth, indicatorHeight);

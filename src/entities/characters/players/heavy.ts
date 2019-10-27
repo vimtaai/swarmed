@@ -16,15 +16,9 @@ export class Heavy extends Player {
   protected secondaryColor = "#333355";
 
   public render(layer: Layer) {
-    this.translateToRelative(layer);
-    this.rotateToRelative(layer);
-
     layer.setStroke("#000000", 0.3);
     layer.setFill(this.secondaryColor);
     layer.drawArc(new Point(0, 0), this.radius * 1.2);
-
-    this.rotateToAbsolute(layer);
-    this.translateToAbsolute(layer);
 
     super.render(layer);
   }

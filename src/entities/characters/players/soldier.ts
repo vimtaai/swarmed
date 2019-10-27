@@ -18,13 +18,7 @@ export class Soldier extends Player {
   public render(layer: Layer) {
     super.render(layer);
 
-    this.translateToRelative(layer);
-    this.rotateToRelative(layer);
-
     layer.setFill(this.secondaryColor);
     layer.drawArc(new Point(-2, 0), this.radius * 0.8);
-
-    this.rotateToAbsolute(layer);
-    this.translateToAbsolute(layer);
   }
 }

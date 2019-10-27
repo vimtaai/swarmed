@@ -6,9 +6,9 @@ import { state } from "../../state";
 
 export class AmmoIndicator extends UIElement {
   public render(layer: Layer) {
-    const ammoLabel = `${state.player.weapon.ammo}/${state.player.weapon.maxAmmo}`;
+    const ammoLabel = `${state.localPlayer.weapon.ammo}/${state.localPlayer.weapon.maxAmmo}`;
 
-    layer.setFont(25, state.player.weapon.isReloading ? "#ff0000" : "ffffff", "right");
+    layer.setFont(25, state.localPlayer.weapon.isReloading ? "#ff0000" : "ffffff", "right");
     layer.drawTextWithOutline(Point.fromPercentage(98, 95), ammoLabel);
   }
 }

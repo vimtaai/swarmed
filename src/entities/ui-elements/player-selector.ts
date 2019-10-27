@@ -25,7 +25,7 @@ export class PlayerSelector extends UIElement {
     }
 
     this.player.coords = this.coords.shiftX(PlayerSelector.width / 4);
-    this.player.render(layer);
+    this.player.renderRelative(layer);
 
     layer.setFont(22, "#ffffff", "left");
     layer.drawText(this.coords.shiftXY(-PlayerSelector.width / 3, -PlayerSelector.height / 5), this.player.name);

@@ -15,14 +15,8 @@ export class Spore extends Projectile {
   protected trailLength = 4;
 
   public renderTrail(layer: Layer) {
-    this.translateToRelative(layer);
-    this.rotateToRelative(layer);
-
     layer.setStroke("transparent", 0);
     layer.setFill(this.secondaryColor);
     layer.drawArc(new Point(0, 0), this.radius + this.trailLength);
-
-    this.rotateToAbsolute(layer);
-    this.translateToAbsolute(layer);
   }
 }

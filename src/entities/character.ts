@@ -23,15 +23,9 @@ export abstract class Character extends Actor {
   }
 
   public render(layer: Layer) {
-    this.translateToRelative(layer);
-    this.rotateToRelative(layer);
-
     layer.setStroke(this.outlineColor);
     layer.setFill(this.primaryColor);
     layer.drawArc(new Point(0, 0), this.radius);
-
-    this.rotateToAbsolute(layer);
-    this.translateToAbsolute(layer);
   }
 
   public collidesWith(character: Character) {

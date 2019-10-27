@@ -29,15 +29,9 @@ export class Explosion extends Actor {
   }
 
   public render(layer: Layer) {
-    this.translateToRelative(layer);
-    this.rotateToRelative(layer);
-
     layer.setStroke("#000000");
     layer.setFill(percentageToColor(this.percentExploded, 60, 0));
     layer.drawArc(new Point(0, 0), this.radius);
-
-    this.rotateToAbsolute(layer);
-    this.translateToAbsolute(layer);
   }
 
   public next(dt: number) {

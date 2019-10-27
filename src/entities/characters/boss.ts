@@ -41,18 +41,12 @@ export abstract class Boss extends Zombie {
   }
 
   public renderProjectiles(layer: Layer) {
-    for (const projectile of this.projectiles) {
+    this.projectiles.forEach(projectile => {
       projectile.render(layer);
-    }
+    });
   }
 
   public renderWeapon(layer: Layer) {
-    this.translateToRelative(layer);
-    this.rotateToRelative(layer);
-
     this.weapon.render(layer);
-
-    this.rotateToAbsolute(layer);
-    this.translateToAbsolute(layer);
   }
 }

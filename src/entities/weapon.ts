@@ -1,8 +1,11 @@
-import { Point } from "../classes/point";
-import { Layer } from "../classes/layer";
 import { Renderable } from "../interfaces/renderable";
 
-import { Player as Character } from "./characters/player";
+import { Point } from "../classes/point";
+import { Layer } from "../classes/layer";
+
+import { Character } from "../entities/character";
+
+import { state } from "../state";
 
 export abstract class Weapon implements Renderable {
   public abstract isAutomatic: boolean;
@@ -77,7 +80,7 @@ export abstract class Weapon implements Renderable {
         this.reload();
       }
 
-      this.owner.projectiles.push(projectile);
+      state.projectiles.add(projectile);
     }
   }
 }

@@ -22,15 +22,11 @@ export class Heal extends Powerup {
   public render(layer: Layer) {
     super.render(layer);
 
-    this.translateToRelative(layer);
-
     layer.setStroke("transparent");
     layer.setFill(this.secondaryColor);
     layer.drawArc(new Point(0, 0), this.radius - 4);
     layer.setFill(this.primaryColor);
     layer.drawRect(new Point(-this.radius / 2, -this.radius / 8), this.radius, this.radius / 4);
     layer.drawRect(new Point(-this.radius / 8, -this.radius / 2), this.radius / 4, this.radius);
-
-    this.translateToAbsolute(layer);
   }
 }

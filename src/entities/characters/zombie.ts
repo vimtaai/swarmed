@@ -5,6 +5,7 @@ import { Point } from "../../classes/point";
 import { Layer } from "../../classes/layer";
 
 import { Character } from "../../entities/character";
+import { Player } from "../../entities/characters/player";
 
 import { state } from "../../state";
 
@@ -21,7 +22,7 @@ export abstract class Zombie extends Character {
   }
 
   public next(dt: number) {
-    this.face(state.player.coords);
+    this.faceClosestPlayer();
     super.next(dt);
   }
 
@@ -31,17 +32,27 @@ export abstract class Zombie extends Character {
     this.renderHealth(layer);
   }
 
-  public renderHands(layer: Layer) {
-    this.translateToRelative(layer);
-    this.rotateToRelative(layer);
+  public faceClosestPlayer() {
+    let closestPlayer: Player;
+    let smallestDistance = Infinity;
 
+    state.player.forEach(player => {
+      const distance = this.coords.distanceTo(player.coords);
+
+      if (this.coords.distanceTo(player.coords) < smallestDistance) {
+        smallestDistance = distance;
+        closestPlayer = player;
+      }
+    });
+
+    this.face(closestPlayer.coords);
+  }
+
+  public renderHands(layer: Layer) {
     layer.setStroke(this.outlineColor);
     layer.setFill(this.secondaryColor);
     layer.drawArc(new Point(this.radius * 0.8, -this.radius * 0.8), this.radius * 0.3);
     layer.drawArc(new Point(this.radius * 0.8, this.radius * 0.8), this.radius * 0.3);
-
-    this.rotateToAbsolute(layer);
-    this.translateToAbsolute(layer);
   }
 
   public renderHealth(layer: Layer) {
@@ -56,11 +67,9 @@ export abstract class Zombie extends Character {
     layer.setStroke("#000000");
     layer.setFill(percentageToColor(healthPercentage));
 
-    this.translateToRelative(layer);
-
-    layer.drawRect(new Point(-healthWidth / 2, -this.radius * 2), healthWidth, 7);
-
-    this.translateToAbsolute(layer);
+    layer.withAbsoluteFacing(this.facing, () => {
+      layer.drawRect(new Point(-healthWidth / 2, -this.radius * 2), healthWidth, 7);
+    });
   }
 
   public spawn() {

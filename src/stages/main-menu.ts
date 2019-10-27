@@ -26,7 +26,9 @@ export class MainMenuStage extends Stage {
   public constructor() {
     super();
 
+    state.player = new Set();
     const selectionStart = Point.fromPercentage(50, 34);
+
     for (const playerOption of this.playerOptions) {
       const playerOptionIndex = this.playerOptions.indexOf(playerOption);
       const playerSelectorCoords = selectionStart.shiftY(playerOptionIndex * PlayerSelector.height);
@@ -54,7 +56,8 @@ export class MainMenuStage extends Stage {
       }
 
       if (uiElement.isHovered) {
-        state.player = uiElement.player;
+        state.player.add(uiElement.player);
+        state.localPlayer = uiElement.player;
         state.setStage(new GameStage());
       }
     }
