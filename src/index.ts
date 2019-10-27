@@ -1,11 +1,10 @@
 import { Point } from "./classes/point";
 import { Layer } from "./classes/layer";
 
-import { MainMenuStage } from "./actors/stages/main-menu";
-import { TestStage } from "./actors/stages/test";
+import { MainMenuStage } from "./stages/main-menu";
+import { TestStage } from "./stages/test";
 
 import { state } from "./state";
-import { background, foreground, overlay, ui } from "./layers";
 
 let lastRender: number = Date.now();
 
@@ -30,11 +29,7 @@ function gameLoop() {
 
   state.stage.next(dt);
 
-  const layers = [background, foreground, overlay, ui];
-  for (const layer of layers) {
-    layer.clear();
-  }
-
+  state.stage.clearLayers();
   state.stage.render();
 
   lastRender = Date.now();
@@ -49,11 +44,13 @@ addEventListener("pointermove", function(event: MouseEvent) {
   state.mousePosition = Point.fromRealXY(event.offsetX, event.offsetY);
 });
 
+addEventListener("pointerdown", function(event: MouseEvent) {
+  state.mousePosition = Point.fromRealXY(event.offsetX, event.offsetY);
+});
+
 addEventListener("load", function() {
+  state.setStage(new MainMenuStage());
   autoSize();
-
-  state.setStage(MainMenuStage);
-
   requestAnimationFrame(gameLoop);
 });
 

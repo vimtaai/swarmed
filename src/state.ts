@@ -1,60 +1,51 @@
-import { removeFromArray } from "./utils/array";
-import { Explodable } from "./types/explodable";
-import { Point } from "./classes/point";
+import { Explodable } from "./interfaces/explodable";
 
-import { Player } from "./actors/characters/player";
-import { Zombie } from "./actors/characters/zombie";
-import { Boss } from "./actors/characters/boss";
-import { Powerup } from "./actors/characters/powerup";
-import { Explosion } from "./actors/explosion";
-import { Projectile } from "./actors/characters/projectile";
-import { Stage } from "./actors/stage";
-import { GameStage } from "./actors/stages/game";
-import { MainMenuStage } from "./actors/stages/main-menu";
-import { ScoreScreenStage } from "./actors/stages/score-screen";
+import { Point } from "./classes/point";
+import { Stage } from "./classes/stage";
+
+import { Player } from "./entities/characters/player";
+import { Zombie } from "./entities/characters/zombie";
+import { Boss } from "./entities/characters/boss";
+import { Powerup } from "./entities/characters/powerup";
+import { Explosion } from "./entities/explosion";
 
 export class State {
   public mousePosition: Point = Point.fromPercentage(50, 50);
   public stage: Stage;
 
   public player: Player;
-  public boss: Boss;
-  public zombies: Zombie[];
-  public powerups: Powerup[];
-  public explosions: Explosion[];
+  public boss: Set<Boss>;
+  public zombies: Set<Zombie>;
+  public powerups: Set<Powerup>;
+  public explosions: Set<Explosion>;
   public score: number;
 
-  public setStage(StageType: typeof GameStage | typeof MainMenuStage | typeof ScoreScreenStage) {
-    this.stage = new StageType();
+  public setStage(stage: Stage) {
+    this.stage = stage;
     this.stage.registerEventListeners();
   }
 
   public destroyZombie(zombie: Zombie | Zombie & Explodable) {
-    if ("createExplosion" in zombie) {
-      const explosion = zombie.createExplosion();
-      state.explosions.push(explosion);
+    if ("explode" in zombie) {
+      const explosion = zombie.explode();
+      state.explosions.add(explosion);
     }
 
-    removeFromArray(state.zombies, zombie);
+    state.zombies.delete(zombie);
     state.score += zombie.scoreValue;
   }
 
+  public destroyBoss(boss: Boss) {
+    state.boss.delete(boss);
+    state.score += boss.scoreValue;
+  }
+
   public destroyPowerup(powerup: Powerup) {
-    removeFromArray(state.powerups, powerup);
+    state.powerups.delete(powerup);
   }
 
   public destroyExplosion(explosion: Explosion) {
-    if (explosion.collidesWith(state.player)) {
-      console.log("damage player");
-      state.player.sufferDamage(explosion.damage);
-    }
-
-    for (const zombie of state.zombies) {
-      if (explosion.collidesWith(zombie)) {
-        zombie.sufferDamage(explosion.damage);
-      }
-    }
-    removeFromArray(state.explosions, explosion);
+    state.explosions.delete(explosion);
   }
 }
 

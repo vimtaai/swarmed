@@ -2,8 +2,12 @@ export abstract class Animation {
   public abstract duration: number;
   protected started: number;
 
+  public get progress(): number {
+    return (Date.now() - this.started) / this.duration;
+  }
+
   public get isFinished(): boolean {
-    return Date.now() - this.started >= this.duration;
+    return this.progress >= 1;
   }
 
   public start() {

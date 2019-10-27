@@ -31,13 +31,12 @@ export class Layer {
   public canvas: HTMLCanvasElement;
   public context: CanvasRenderingContext2D;
 
-  constructor(id: string) {
+  constructor() {
     const root = document.getElementById("root");
     this.canvas = document.createElement("canvas");
     this.context = this.canvas.getContext("2d");
-
-    this.canvas.id = id;
-
+    this.canvas.width = Layer.width;
+    this.canvas.height = Layer.height;
     root.append(this.canvas);
   }
 
