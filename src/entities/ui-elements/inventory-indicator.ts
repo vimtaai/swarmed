@@ -16,7 +16,7 @@ export class InventoryIndicator extends UIElement {
 
   public render(layer: Layer) {
     const radius = HealthIndicator.height / 4;
-    const panelCoords = InventoryIndicator.coords.shiftXY(-HealthIndicator.height * 0.15, 0);
+    const panelCoords = InventoryIndicator.coords.shiftX(-HealthIndicator.height * 0.2);
 
     layer.setStroke("#000000", 2);
     layer.setFill(state.localPlayer.secondaryColor);
