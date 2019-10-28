@@ -1,11 +1,9 @@
-import { removeFromArray } from "../../utils/array";
-
 import { Point } from "../../classes/point";
 import { Layer } from "../../classes/layer";
 
-import { Character } from "../../entities/character";
 import { Weapon } from "../../entities/weapon";
-import { Projectile } from "../../entities/characters/projectile";
+import { Character } from "../../entities/character";
+import { Powerup } from "../../entities/characters/powerup";
 
 import { state } from "../../state";
 
@@ -16,6 +14,9 @@ export abstract class Player extends Character {
   public showHealth = false;
   public speed = new Point(0, 0);
   public facing = 0;
+  public outlineColor = "#000000";
+
+  public inventory: Powerup | null = null;
 
   constructor(startingCoords: Point = new Point(50, 50)) {
     super();

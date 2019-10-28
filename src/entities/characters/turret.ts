@@ -1,18 +1,12 @@
 import { Layer } from "../../classes/layer";
 
-import { Zombie } from "./zombie";
-import { Weapon } from "../weapon";
+import { Player } from "../../entities/characters/player";
 
-export abstract class Boss extends Zombie {
-  public abstract weapon: Weapon;
-  public showHealth = false;
+export abstract class Turret extends Player {
+  public showHealth = true;
 
   public next(dt: number) {
     super.next(dt);
-
-    if (this.weapon.canAutoFire) {
-      this.weapon.fire();
-    }
   }
 
   public render(layer: Layer) {

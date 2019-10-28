@@ -1,17 +1,16 @@
-import { percentageToColor } from "../../utils/color";
 import { randomBetween } from "../../utils/random";
 
 import { Point } from "../../classes/point";
 import { Layer } from "../../classes/layer";
 
 import { Character } from "../../entities/character";
-import { Player } from "../../entities/characters/player";
 
 import { state } from "../../state";
 
 export abstract class Zombie extends Character {
   public static spawnRate: number;
 
+  public outlineColor = "#000000";
   public abstract damage: number;
   public abstract scoreValue: number;
 
@@ -29,23 +28,10 @@ export abstract class Zombie extends Character {
   public render(layer: Layer) {
     this.renderHands(layer);
     super.render(layer);
-    this.renderHealth(layer);
   }
 
   public faceClosestPlayer() {
-    let closestPlayer: Player;
-    let smallestDistance = Infinity;
-
-    state.player.forEach(player => {
-      const distance = this.coords.distanceTo(player.coords);
-
-      if (this.coords.distanceTo(player.coords) < smallestDistance) {
-        smallestDistance = distance;
-        closestPlayer = player;
-      }
-    });
-
-    this.face(closestPlayer.coords);
+    this.face(this.closestCharacter(state.players).coords);
   }
 
   public renderHands(layer: Layer) {
@@ -53,23 +39,6 @@ export abstract class Zombie extends Character {
     layer.setFill(this.secondaryColor);
     layer.drawArc(new Point(this.radius * 0.8, -this.radius * 0.8), this.radius * 0.3);
     layer.drawArc(new Point(this.radius * 0.8, this.radius * 0.8), this.radius * 0.3);
-  }
-
-  public renderHealth(layer: Layer) {
-    if (!this.showHealth) {
-      return;
-    }
-
-    const healthMaxWidth = this.maxHealth / 5;
-    const healthPercentage = this.health / this.maxHealth;
-    const healthWidth = Math.max(healthMaxWidth * healthPercentage, 0);
-
-    layer.setStroke("#000000");
-    layer.setFill(percentageToColor(healthPercentage));
-
-    layer.withAbsoluteFacing(this.facing, () => {
-      layer.drawRect(new Point(-healthWidth / 2, -this.radius * 2), healthWidth, 7);
-    });
   }
 
   public spawn() {

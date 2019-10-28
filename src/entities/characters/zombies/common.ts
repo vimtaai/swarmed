@@ -11,7 +11,7 @@ export class CommonZombie extends Zombie {
   public damage = 10;
   public scoreValue = 1;
   public health = this.maxHealth;
-  protected primaryColor = "#666666";
-  protected secondaryColor = "#888888";
-  protected showHealth = false;
+  public primaryColor = "#666666";
+  public secondaryColor = "#888888";
+  public showHealth = false;
 }

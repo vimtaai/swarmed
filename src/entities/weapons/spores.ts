@@ -12,7 +12,6 @@ export class Spores extends Weapon {
   public ProjectileType = Spore;
   public handOffsets = [new Point(0, -2), new Point(0, 2)];
   public ammo = this.maxAmmo;
-  public isFiring = true;
   protected length = 0;
   protected width = 40;
   protected primaryColor = "#75912d";
@@ -20,7 +19,6 @@ export class Spores extends Weapon {
   public render(layer: Layer) {
     layer.setStroke("transparent");
     layer.setFill(this.primaryColor);
-    console.log(this.width);
     layer.drawArc(new Point(40, 0), this.width);
   }
 }

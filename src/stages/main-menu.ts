@@ -29,7 +29,7 @@ export class MainMenuStage extends Stage {
   public constructor() {
     super();
 
-    state.player = new Set();
+    state.players = new Set();
     const selectionStart = Point.fromPercentage(50, 34);
 
     for (const playerOption of this.playerOptions) {
@@ -54,7 +54,7 @@ export class MainMenuStage extends Stage {
   protected handleClick(event: MouseEvent) {
     for (const playerSelector of this.playerSelectors) {
       if (playerSelector.isHovered) {
-        state.player.add(playerSelector.player);
+        state.players.add(playerSelector.player);
         state.localPlayer = playerSelector.player;
         state.setStage(new GameStage());
       }

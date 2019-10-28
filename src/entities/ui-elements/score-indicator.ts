@@ -5,10 +5,10 @@ import { UIElement } from "../../classes/ui-element";
 import { state } from "../../state";
 
 export class ScoreIndicator extends UIElement {
-  public render(layer: Layer) {
-    const indicatorCoords = Point.fromPercentage(2, 5);
+  public static coords = Point.fromPercentage(2, 5);
 
+  public render(layer: Layer) {
     layer.setFont(25, "#ffffff", "left");
-    layer.drawTextWithOutline(indicatorCoords, `SCORE: ${state.score.toString()}`);
+    layer.drawTextWithOutline(ScoreIndicator.coords, `SCORE: ${state.score.toString()}`);
   }
 }

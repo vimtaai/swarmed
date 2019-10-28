@@ -14,7 +14,7 @@ export class State {
   public mousePosition: Point = Point.fromPercentage(50, 50);
   public stage: Stage;
 
-  public player: Set<Player>;
+  public players: Set<Player>;
   public zombies: Set<Zombie>;
   public bosses: Set<Boss>;
   public projectiles: Set<Projectile>;
@@ -27,6 +27,10 @@ export class State {
   public setStage(stage: Stage) {
     this.stage = stage;
     this.stage.registerEventListeners();
+  }
+
+  public destroyPlayer(player: Player) {
+    this.players.delete(player);
   }
 
   public destroyZombie(zombie: Zombie | Zombie & Explodable) {
@@ -63,3 +67,4 @@ export class State {
 }
 
 export const state = new State();
+// window.state = state;

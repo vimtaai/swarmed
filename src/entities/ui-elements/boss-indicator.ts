@@ -7,13 +7,15 @@ import { UIElement } from "../../classes/ui-element";
 import { state } from "../../state";
 
 export class BossIndicator extends UIElement {
+  public static coords = Point.fromPercentage(50, 3);
+
   public render(layer: Layer) {
     let offsetIndex = 0;
 
     state.bosses.forEach(boss => {
       const indicatorHeight = 20;
       const indicatorMaxWidth = 500;
-      const healthIndicatorCenter = Point.fromPercentage(50, 3).shiftY(indicatorHeight * 2 * offsetIndex);
+      const healthIndicatorCenter = BossIndicator.coords.shiftY(indicatorHeight * 2 * offsetIndex);
       const healthIndicatorWidth = indicatorMaxWidth * boss.percentHealth;
       const healthIndicatorCoords = healthIndicatorCenter.shiftX(-healthIndicatorWidth / 2);
       const healthNumberCoords = healthIndicatorCenter.shiftY(indicatorHeight / 2);

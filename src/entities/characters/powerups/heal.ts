@@ -11,9 +11,13 @@ export class Heal extends Powerup {
   public description = "GIVES YOU BACK 50 HP";
   public moveSpeed = 0;
   public radius = 18;
-  protected primaryColor = "#20a473";
-  protected secondaryColor = "#ffffff";
+  public primaryColor = "#20a473";
+  public secondaryColor = "#ffffff";
   protected healAmount = 50;
+
+  public pickup(player: Player) {
+    this.activate(player);
+  }
 
   public activate(player: Player) {
     player.recieveHeal(this.healAmount);

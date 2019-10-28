@@ -9,9 +9,9 @@ export class Spore extends Projectile {
   public radius = 10;
   public moveSpeed = 200;
   public damage = 20;
-  protected primaryColor = "#92b045";
-  protected secondaryColor = "rgba(170, 196, 104, 0.5)";
-  protected outlineColor = "#75912d";
+  public primaryColor = "#92b045";
+  public secondaryColor = "rgba(170, 196, 104, 0.5)";
+  public outlineColor = "#75912d";
   protected trailLength = 4;
 
   public renderTrail(layer: Layer) {

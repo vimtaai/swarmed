@@ -12,8 +12,8 @@ export class Heavy extends Player {
   public maxHealth = 400;
   public weapon = new Rifle(this);
   public health = this.maxHealth;
-  protected primaryColor = "#555588";
-  protected secondaryColor = "#333355";
+  public primaryColor = "#555588";
+  public secondaryColor = "#333355";
 
   public render(layer: Layer) {
     layer.setStroke("#000000", 0.3);

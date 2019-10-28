@@ -8,8 +8,10 @@ import { RunnerZombie } from "../entities/characters/zombies/runner";
 import { BoomerZombie } from "../entities/characters/zombies/boomer";
 import { Heal } from "../entities/characters/powerups/heal";
 import { Shield } from "../entities/characters/powerups/shield";
+import { AutoTurret } from "../entities/characters/powerups/autoturret";
 import { Abberation } from "../entities/characters/bosses/abberation";
 import { HealthIndicator } from "../entities/ui-elements/health-indicator";
+import { InventoryIndicator } from "../entities/ui-elements/inventory-indicator";
 import { ReloadIndicator } from "../entities/ui-elements/reload-indicator";
 import { ScoreIndicator } from "../entities/ui-elements/score-indicator";
 import { AmmoIndicator } from "../entities/ui-elements/ammo-indicator";
@@ -18,6 +20,7 @@ import { BossIndicator } from "../entities/ui-elements/boss-indicator";
 import { ScoreScreenStage } from "../stages/score-screen";
 
 import { state } from "../state";
+import { Boss } from "../entities/characters/boss";
 
 export class GameStage extends Stage {
   protected layers = {
@@ -32,6 +35,7 @@ export class GameStage extends Stage {
     pointerup: (e: MouseEvent) => this.handleMouseUp(e)
   };
   protected uiElements = {
+    inventoryIndicator: new InventoryIndicator(),
     healthIndicator: new HealthIndicator(),
     reloadIndicator: new ReloadIndicator(),
     scoreIndicator: new ScoreIndicator(),
@@ -63,7 +67,7 @@ export class GameStage extends Stage {
     this.nextPowerups(dt);
     this.nextExplosions(dt);
 
-    if (Array.from(state.player).every(player => player.isDead)) {
+    if (state.localPlayer.isDead) {
       state.setStage(new ScoreScreenStage());
     }
   }
@@ -72,7 +76,7 @@ export class GameStage extends Stage {
     this.layers.back.fill("#4dbd33");
 
     state.projectiles.forEach(projectile => projectile.renderRelative(this.layers.main));
-    state.player.forEach(player => player.renderRelative(this.layers.main));
+    state.players.forEach(player => player.renderRelative(this.layers.main));
     state.bosses.forEach(boss => boss.renderRelative(this.layers.main));
     state.zombies.forEach(zombie => zombie.renderRelative(this.layers.main));
     state.powerups.forEach(powerup => powerup.renderRelative(this.layers.main));
@@ -82,7 +86,11 @@ export class GameStage extends Stage {
   }
 
   public nextPlayers(dt: number) {
-    state.player.forEach(player => {
+    state.players.forEach(player => {
+      if (player.isDead) {
+        state.destroyPlayer(player);
+      }
+
       player.next(dt);
     });
   }
@@ -91,12 +99,17 @@ export class GameStage extends Stage {
     state.zombies.forEach(zombie => {
       if (zombie.isDead) {
         state.destroyZombie(zombie);
+
+        if (zombie instanceof Boss) {
+          this.bossTimer = Date.now();
+        }
+
         this.createPowerups(zombie.coords);
       }
 
       zombie.next(dt);
 
-      state.player.forEach(player => {
+      state.players.forEach(player => {
         if (zombie.collidesWith(player)) {
           player.sufferDamage(zombie.damage);
           state.destroyZombie(zombie);
@@ -120,9 +133,9 @@ export class GameStage extends Stage {
 
   public nextPowerups(dt: number) {
     state.powerups.forEach(powerup => {
-      state.player.forEach(player => {
+      state.players.forEach(player => {
         if (powerup.collidesWith(player)) {
-          powerup.activate(player);
+          powerup.pickup(player);
           state.destroyPowerup(powerup);
         }
       });
@@ -134,7 +147,7 @@ export class GameStage extends Stage {
       explosion.next(dt);
 
       if (explosion.isFinished) {
-        state.player.forEach(player => {
+        state.players.forEach(player => {
           if (explosion.collidesWith(player)) {
             player.sufferDamage(explosion.damage);
           }
@@ -161,7 +174,7 @@ export class GameStage extends Stage {
       state.zombies.add(boss);
       state.bosses.add(boss);
 
-      this.bossTimer = Date.now();
+      this.bossTimer = Infinity;
     }
   }
 
@@ -180,7 +193,7 @@ export class GameStage extends Stage {
   }
 
   public createPowerups(point: Point) {
-    const powerupTypes = [Heal, Shield];
+    const powerupTypes = [Heal, Shield, AutoTurret];
 
     for (const PowerupType of powerupTypes) {
       if (Math.random() < PowerupType.dropRate) {
@@ -202,6 +215,10 @@ export class GameStage extends Stage {
       state.localPlayer.speed.x = Layer.toPixels(state.localPlayer.moveSpeed);
     } else if (event.code === "KeyR") {
       state.localPlayer.weapon.reload();
+    } else if (event.code === "Space") {
+      if (state.localPlayer.inventory !== null) {
+        state.localPlayer.inventory.activate(state.localPlayer);
+      }
     }
   }
 

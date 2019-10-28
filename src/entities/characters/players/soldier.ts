@@ -12,8 +12,8 @@ export class Soldier extends Player {
   public maxHealth = 200;
   public weapon = new SMG(this);
   public health = this.maxHealth;
-  protected primaryColor = "#228811";
-  protected secondaryColor = "#115500";
+  public primaryColor = "#228811";
+  public secondaryColor = "#115500";
 
   public render(layer: Layer) {
     super.render(layer);

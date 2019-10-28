@@ -15,9 +15,9 @@ export class BoomerZombie extends Zombie implements Explodable {
   public explosionRadius = 80;
   public explosionDamage = 50;
   public health = this.maxHealth;
-  protected primaryColor = "#aa6666";
-  protected secondaryColor = "#bb8888";
-  protected showHealth = true;
+  public primaryColor = "#aa6666";
+  public secondaryColor = "#bb8888";
+  public showHealth = true;
 
   public explode(): Explosion {
     return new Explosion(this.coords, this.explosionRadius, this.explosionDamage);

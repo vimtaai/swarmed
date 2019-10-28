@@ -11,9 +11,8 @@ export abstract class Projectile extends Character {
   public abstract damage: number;
   public maxHealth = 0;
   public targets: Set<Character>;
+  public showHealth = false;
   protected abstract trailLength: number;
-  protected showHealth = false;
-  protected trailColor = "rgba(0, 0, 0, 0.5)";
 
   public get speed(): Point {
     return new Point(Math.cos(this.facing) * this.moveSpeed, Math.sin(this.facing) * this.moveSpeed);
@@ -24,7 +23,7 @@ export abstract class Projectile extends Character {
     this.coords = Point.clone(character.coords);
 
     if (character instanceof Zombie) {
-      this.targets = state.player;
+      this.targets = state.players;
     } else if (character instanceof Player) {
       this.targets = state.zombies;
     }
@@ -36,7 +35,7 @@ export abstract class Projectile extends Character {
   }
 
   protected renderTrail(layer: Layer) {
-    layer.setStroke(this.trailColor, 2 * this.radius);
+    layer.setStroke(this.secondaryColor, 2 * this.radius);
     layer.drawLine(new Point(0, 0), new Point(-this.trailLength, 0));
   }
 }

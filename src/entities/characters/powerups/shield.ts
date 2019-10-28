@@ -6,12 +6,17 @@ import { Player } from "../../../entities/characters/player";
 
 export class Shield extends Powerup {
   public static dropRate = 0.02;
+
   public name = "SHIELD";
   public description = "GIVES YOU 100 SHIELD";
   public moveSpeed = 0;
   public radius = 18;
-  protected primaryColor = "#2073a4";
-  protected secondaryColor = "#ffffff";
+  public primaryColor = "#2073a4";
+  public secondaryColor = "#ffffff";
+
+  public pickup(player: Player) {
+    this.activate(player);
+  }
 
   public activate(player: Player) {
     const shieldAmount = 100;

@@ -6,6 +6,8 @@ import { Layer } from "../classes/layer";
 import { state } from "../state";
 
 export abstract class UIElement implements Renderable {
+  public static coords: Point;
+
   public get isHovered(): boolean {
     return this.isWithinBoundaries(state.mousePosition);
   }

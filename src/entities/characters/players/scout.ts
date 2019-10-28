@@ -12,8 +12,8 @@ export class Scout extends Player {
   public maxHealth = 150;
   public weapon = new Pistol(this);
   public health = this.maxHealth;
-  protected primaryColor = "#558800";
-  protected secondaryColor = "#335500";
+  public primaryColor = "#558800";
+  public secondaryColor = "#335500";
 
   public render(layer: Layer) {
     layer.setStroke("#000000");

@@ -11,7 +11,7 @@ export class RunnerZombie extends Zombie {
   public damage = 5;
   public scoreValue = 2;
   public health = this.maxHealth;
-  protected primaryColor = "#447744";
-  protected secondaryColor = "#557755";
-  protected showHealth = false;
+  public primaryColor = "#447744";
+  public secondaryColor = "#557755";
+  public showHealth = false;
 }
