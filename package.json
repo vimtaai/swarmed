@@ -6,7 +6,7 @@
   "repository": "github:vimtaai/swarmed",
   "scripts": {
     "clean": "rm -rf dist/*",
-    "build": "npm run clean && parcel build index.html",
+    "build": "npm run clean && parcel build index.html --public-url swarmed",
     "start:dev": "parcel index.html",
     "start": "serve dist"
   },
